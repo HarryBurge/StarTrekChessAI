@@ -5,15 +5,11 @@ Class for knight, inherits code for Piece
 __authour__ = 'Harry Burge'
 __date_created__ = '16/04/2020'
 __last_updated_by__ = 'Harry Burge'
-__last_updated_date__ = '20/04/2020'
-
+__last_updated_date__ = '23/04/2020'
 
 '''
 TODO:-
-Create Valid move coords whilst a board is passed
 Img_path
-
-
 
 '''
 
@@ -23,21 +19,39 @@ from bin.Game.Pieces import piece_class
 
 class Knight(piece_class.Piece):
 
-    def __init__(self, coords, img_path='imgs/', value=3, team='Netural', **kwargs):
+    def __init__(self, img_path='bin/Game/Pieces/imgs/', value=3, team='Netural', **kwargs):
         '''
         params:-
-            coords : [int,int,int] : Poisition in the grid [x,y,z]
             img_path : str : Path to the folder where images are stores
             value : int : Value assigned to the piece
 
             **kwargs:-
                 team : str : Name of team that the piece is on
         '''
-        super().__init__(coords, img_path+team+'-Knight.png', value, **kwargs)
+        super().__init__(img_path+team+'-Knight.png', value, **kwargs)
 
 
-    def _valid_move_coords(self, board):
-        pass
+    def valid_move_coords(self, board, x,y,z):
+        '''
+        params:-
+            board : Map : Board with respect to
+            x,y,z : int : Coords of piece
+        returns:-
+            [{'coords' : (int,int,int), 'mv_type' : str}, ...] : List of 
+                all moves that can be made from this piece
+        '''
+        testable_moves = []
+
+        for i in ['dx', 'dy', 'dz']:
+
+            for dx in ([-2,2] if i == 'dx' else [-1,1]):
+                for dy in ([-2,2] if i == 'dy' else [-1,1]):
+                    for dz in ([-2,2] if i == 'dz' else [-1,1]):
+
+                        testable_moves.append([x+dx,y+dy,z+dz])
+
+        return self._test_coords(board, testable_moves)
+
 
 
 if __name__=='__main__':

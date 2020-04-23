@@ -5,19 +5,17 @@ Map class. Is used to read in map files and be able to control them.
 __authour__ = 'Harry Burge'
 __date_created__ = '20/04/2020'
 __last_updated_by__ = 'Harry Burge'
-__last_updated_date__ = '20/04/2020'
+__last_updated_date__ = '22/04/2020'
 
 
 '''
 TODO:-
-Turn x into an actual object
-
-
 
 '''
+
+# Imports
 import importlib
 
-# Code
 
 class Map:
 
@@ -31,11 +29,18 @@ class Map:
         map_file = importlib.import_module(path)
 
         self._board = map_file.map_array
+        self._size = map_file.map_size
 
 
     # Getters
     def get_gridpoi(self, x, y, z):
-        return self._board[x][y][z]
+        if x < 0 or y < 0 or z < 0:
+            return False
+        else:
+            try:
+                return self._board[z][y][x]
+            except IndexError:
+                return False
 
     def get_board(self):
         return self._board
@@ -43,10 +48,17 @@ class Map:
 
     # Funcs
     def move_piece(self, x1, y1, z1, x2, y2, z2):
-        taken_piece = self._board[x2][y2][z2]
-        self._board[x2][y2][z2] = self._board[x1][y1][z1]
-        self._board[x1][y1][z1] = 'x'
-        return taken_piece
+        if x1 < 0 or y1 < 0 or z1 < 0 or x2 < 0 or y2 < 0 or z2 < 0:
+            return False
+        else:
+            try:
+                taken_piece = self._board[z2][y2][x2]
+                self._board[z2][y2][x2] = self._board[z1][y1][x1]
+                self._board[z1][y1][x1] = '@'
+                return taken_piece
+            except IndexError:
+                return False
+
 
 
 if __name__ == '__main__':
