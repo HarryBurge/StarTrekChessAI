@@ -86,6 +86,10 @@ class Visualliser(App):
         self.main = Main()
         return self.main
 
+    def update_board(self, board):
+        self.board = board
+        self.main.ids.sm.board = board
+
 
 class Main(GridLayout):
     pass
@@ -111,6 +115,35 @@ class Square(Button):
         self.gx = gx
         self.gy = gy
         self.gz = gz
+
+    def change_square(self, x,y,z, gridpoi):
+
+        if gridpoi == 'x':
+            self.background_color = BCKGRND_CLR
+
+        elif gridpoi == '@':
+            if x%2 == 0 and y%2 == 0:
+                self.background_color = BLACK_FREE
+            elif x%2 != 0 and y%2 == 0:
+                self.background_color = WHITE_FREE
+            elif x%2 == 0 and y%2 != 0:
+                self.background_color = WHITE_FREE
+            else:
+                self.background_color = BLACK_FREE
+
+        else:
+            if x%2 == 0 and y%2 == 0:
+                self.background_color = BLACK_FREE
+                self.background_normal = gridpoi.img_path
+            elif x%2 != 0 and y%2 == 0:
+                self.background_color = WHITE_FREE
+                self.background_normal = gridpoi.img_path
+            elif x%2 == 0 and y%2 != 0:
+                self.background_color = WHITE_FREE
+                self.background_normal = gridpoi.img_path
+            else:
+                self.background_color = BLACK_FREE
+                self.background_normal = gridpoi.img_path
 
 
 class Board(ScreenManager):
