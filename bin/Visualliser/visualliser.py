@@ -1,11 +1,12 @@
 '''
-A class to visualise the game and also take instructions in if feature is enabled
+A class to visualise the game and also take instructions in if feature is enabled.
+Class is Visualliser and when run() stops code execution so needs to be threaded.
 '''
 
 __authour__ = 'Harry Burge'
 __date_created__ = '24/04/2020'
 __last_updated_by__ = 'Harry Burge'
-__last_updated_date__ = '28/04/2020'
+__last_updated_date__ = '30/04/2020'
 
 
 '''
@@ -38,33 +39,38 @@ Builder.load_string("""
 
     Button:
         id: up_level
-        on_press: app.main.ids.sm.changeLevel(app.main.ids.sm.level - 1)
+        on_press: app.entire.ids.board.changeLevel(app.entire.ids.board.level - 1, app.board)
 
     Button:
         id: down_level
-        on_press: app.main.ids.sm.changeLevel(app.main.ids.sm.level + 1)
+        on_press: app.entire.ids.board.changeLevel(app.entire.ids.board.level + 1, app.board)
 
-<Main>:
+
+<Entire>:
     cols: 2
 
     Board:
-        id: sm
+        id: board
         on_kv_post: self.build_board(app.board)
 
     UI:
 
-<BackgroundColor@Widget>:
+
+<BackgroundColor>:
     background_color: 1,1,1,1
+
     canvas.before:
         Color:
             rgba: root.background_color
         Rectangle:
             size: self.size
             pos: self.pos
+
 
 <Square>:
     background_color: 1,1,1,1
     background_normal: ''
+
     canvas.before:
         Color:
             rgba: root.background_color
@@ -72,78 +78,49 @@ Builder.load_string("""
             size: self.size
             pos: self.pos
 
-    on_press: print(self.gx, self.gy, self.gz)
+    on_press: 
+        app.game_controller.controlloop_file.clicked(self.gx,self.gy,self.gz)
 """)
 
 
+# Classes
 class Visualliser(App):
 
-    def __init__(self, board, *args, **kwargs):
+    def __init__(self, board, game_controller, *args, **kwargs):
+        '''
+        params:-
+            board : Map : board to display
+            game_controller : Game_Controller : keeps link to the gamecontroller that controls this
+        '''
         super().__init__(*args, **kwargs)
+
         self.board = board
+        self.game_controller = game_controller
 
     def build(self):
-        self.main = Main()
-        return self.main
+        self.entire = Entire()
+        return self.entire
 
     def update_board(self, board):
+        '''
+        params:-
+            board : Map : takes new board passed and prints onto old one
+        '''
         self.board = board
-        self.main.ids.sm.board = board
+
+        # all sqaures(buttons) owned by board
+        for i in self.entire.ids.board.squares:
+
+            if type(i) != BackgroundColor:
+                i.update_square(i.gx, i.gy, i.gz, board.get_gridpoi(i.gx, i.gy, i.gz))
 
 
-class Main(GridLayout):
+class Entire(GridLayout):
     pass
 
-class BackgroundColor(Widget):
-
-    def __init__(self, background_color, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        self.background_color = background_color
 
 class UI(GridLayout):
     pass
-
-class Square(Button):
-    
-    def __init__(self, gx,gy,gz, background_color, background_normal='', *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        self.background_color = background_color
-        self.background_normal = background_normal
-
-        self.gx = gx
-        self.gy = gy
-        self.gz = gz
-
-    def change_square(self, x,y,z, gridpoi):
-
-        if gridpoi == 'x':
-            self.background_color = BCKGRND_CLR
-
-        elif gridpoi == '@':
-            if x%2 == 0 and y%2 == 0:
-                self.background_color = BLACK_FREE
-            elif x%2 != 0 and y%2 == 0:
-                self.background_color = WHITE_FREE
-            elif x%2 == 0 and y%2 != 0:
-                self.background_color = WHITE_FREE
-            else:
-                self.background_color = BLACK_FREE
-
-        else:
-            if x%2 == 0 and y%2 == 0:
-                self.background_color = BLACK_FREE
-                self.background_normal = gridpoi.img_path
-            elif x%2 != 0 and y%2 == 0:
-                self.background_color = WHITE_FREE
-                self.background_normal = gridpoi.img_path
-            elif x%2 == 0 and y%2 != 0:
-                self.background_color = WHITE_FREE
-                self.background_normal = gridpoi.img_path
-            else:
-                self.background_color = BLACK_FREE
-                self.background_normal = gridpoi.img_path
 
 
 class Board(ScreenManager):
@@ -155,12 +132,20 @@ class Board(ScreenManager):
         self.transition = SwapTransition()
 
     def build_board(self, board):
-        self.board = board
+        '''
+        params:-
+            board : Map : will create the the visuals for the board
+        '''
+        # will hold all squares created by below function for later callback
+        self.squares = []
 
         for z in range(len(board.get_board())):
-            temp = Screen(name='Level{}'.format(z))
 
-            level = GridLayout(rows=len(board.get_board()[0]), cols=len(board.get_board()[0][0]))
+            # creates screen for that level
+            level_screen = Screen(name='Level{}'.format(z))
+
+            # holds sqaures in gridlayout for that level
+            level_board = GridLayout(rows=len(board.get_board()[0]), cols=len(board.get_board()[0][0]))
 
             for y in range(len(board.get_board()[0])):
                 for x in range(len(board.get_board()[0][0])):
@@ -168,36 +153,84 @@ class Board(ScreenManager):
                     current = board.get_gridpoi(x,y,z)
 
                     if current == 'x':
-                        level.add_widget(BackgroundColor(background_color=BCKGRND_CLR))
-
-                    elif current == '@':
-                        if x%2 == 0 and y%2 == 0:
-                            level.add_widget(Square(x,y,z,background_color=BLACK_FREE))
-                        elif x%2 != 0 and y%2 == 0:
-                            level.add_widget(Square(x,y,z,background_color=WHITE_FREE))
-                        elif x%2 == 0 and y%2 != 0:
-                            level.add_widget(Square(x,y,z,background_color=WHITE_FREE))
-                        else:
-                            level.add_widget(Square(x,y,z,background_color=BLACK_FREE))
+                        temp = BackgroundColor(background_color=BCKGRND_CLR)
 
                     else:
-                        if x%2 == 0 and y%2 == 0:
-                            level.add_widget(Square(x,y,z,background_color=BLACK_FREE, background_normal=current.img_path))
-                        elif x%2 != 0 and y%2 == 0:
-                            level.add_widget(Square(x,y,z,background_color=WHITE_FREE, background_normal=current.img_path))
-                        elif x%2 == 0 and y%2 != 0:
-                            level.add_widget(Square(x,y,z,background_color=WHITE_FREE, background_normal=current.img_path))
-                        else:
-                            level.add_widget(Square(x,y,z,background_color=BLACK_FREE, background_normal=current.img_path))
+                        temp = Square(x,y,z)
+                        temp.update_square(x,y,z, current)
+                    
+                    # adds square to squares and to the board for visuals
+                    self.squares.append(temp)
+                    level_board.add_widget(temp)
 
-            temp.add_widget(level)
+            # adds board to the screen and then screen to the screen manager
+            level_screen.add_widget(level_board)
+            self.add_widget(level_screen)
 
-            self.add_widget(temp)
-
-    def changeLevel(self, num):
-        if num >= 0 and num < len(self.board.get_board()):
+    def changeLevel(self, num, board):
+        '''
+        params:-
+            num : int : level number to jump to
+            board : Map : used to check whether num is to high or low
+        '''
+        if num >= 0 and num < len(board.get_board()):
             self.level = num
             self.current = 'Level' + str(num)
+
+
+class BackgroundColor(Widget):
+
+    def __init__(self, background_color, *args, **kwargs):
+        '''
+        params:-
+            background_color : [int,int,int,int] : colour of the background
+        '''
+        super().__init__(*args, **kwargs)
+
+        self.background_color = background_color
+
+
+class Square(Button):
+    
+    def __init__(self, gx,gy,gz, *args, **kwargs):
+        '''
+        params:-
+            gx : int : grid x coordinate
+            gy : int : grid y coordinate
+            gz : int : grid z coordinate
+        '''
+        super().__init__(*args, **kwargs)
+
+        self.gx = gx
+        self.gy = gy
+        self.gz = gz
+
+    def update_square(self, gx,gy,gz, gridpoi):
+        '''
+        params:-
+            gx : int : grid x coordinate, used to workout black or white square
+            gy : int : grid y coordinate, used to workout black or white square
+            gz : int : grid z coordinate
+            gridpoi : [str|Piece|Piece_subclass] : updates to this image
+        '''
+
+        if gridpoi == 'x':
+            self.background_color = BCKGRND_CLR
+
+        else:
+            if gx%2 == 0 and gy%2 == 0:
+                self.background_color = BLACK_FREE
+            elif gx%2 != 0 and gy%2 == 0:
+                self.background_color = WHITE_FREE
+            elif gx%2 == 0 and gy%2 != 0:
+                self.background_color = WHITE_FREE
+            else:
+                self.background_color = BLACK_FREE
+
+            if gridpoi != '@':
+                self.background_normal = gridpoi.img_path
+            elif gridpoi == '@':
+                self.background_normal = ''
 
 
 
