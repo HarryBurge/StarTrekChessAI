@@ -28,7 +28,7 @@ class Knight(piece_class.Piece):
             **kwargs:-
                 team : str : Name of team that the piece is on
         '''
-        super().__init__(img_path+team+'-Knight.png', value, **kwargs)
+        super().__init__(img_path+team+'-Knight.png', value, team, **kwargs)
 
 
     def valid_move_coords(self, board, x,y,z):

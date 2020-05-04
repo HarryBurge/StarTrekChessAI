@@ -33,11 +33,16 @@ class GameController:
         self.visualliser = visualliser.Visualliser(board, self)
 
         self.board = board
+        self.instructions = []
 
 
     def run(self):
         threading._start_new_thread(self.controlloop_file.run, (self,))
         threading._start_new_thread(self.visualliser.run(), ())
+
+
+    def clicked(self, gx,gy,gz):
+        self.instructions.append([gx,gy,gz])
  
 
 

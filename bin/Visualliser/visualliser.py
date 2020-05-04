@@ -79,7 +79,7 @@ Builder.load_string("""
             pos: self.pos
 
     on_press: 
-        app.game_controller.controlloop_file.clicked(self.gx,self.gy,self.gz)
+        app.game_controller.clicked(self.gx,self.gy,self.gz)
 """)
 
 
@@ -167,6 +167,7 @@ class Board(ScreenManager):
             level_screen.add_widget(level_board)
             self.add_widget(level_screen)
 
+
     def changeLevel(self, num, board):
         '''
         params:-
@@ -218,19 +219,33 @@ class Square(Button):
             self.background_color = BCKGRND_CLR
 
         else:
-            if gx%2 == 0 and gy%2 == 0:
-                self.background_color = BLACK_FREE
-            elif gx%2 != 0 and gy%2 == 0:
-                self.background_color = WHITE_FREE
-            elif gx%2 == 0 and gy%2 != 0:
-                self.background_color = WHITE_FREE
-            else:
-                self.background_color = BLACK_FREE
+            if type(gridpoi) == list:
+                if gridpoi[0] == 'D':
+                    self.background_color = [1,1,0,1]
+                elif gridpoi[0] == 'M':
+                    self.background_color = [1,0,1,1]
+                elif gridpoi[0] == 'T':
+                    self.background_color = [0,1,1,1]
 
-            if gridpoi != '@':
-                self.background_normal = gridpoi.img_path
-            elif gridpoi == '@':
-                self.background_normal = ''
+                if gridpoi[1] != '@':
+                    self.background_normal = gridpoi[1].img_path
+                elif gridpoi[1] == '@':
+                    self.background_normal = ''
+
+            else:
+                if gx%2 == 0 and gy%2 == 0:
+                    self.background_color = BLACK_FREE
+                elif gx%2 != 0 and gy%2 == 0:
+                    self.background_color = WHITE_FREE
+                elif gx%2 == 0 and gy%2 != 0:
+                    self.background_color = WHITE_FREE
+                else:
+                    self.background_color = BLACK_FREE
+
+                if gridpoi != '@':
+                    self.background_normal = gridpoi.img_path
+                elif gridpoi == '@':
+                    self.background_normal = ''
 
 
 

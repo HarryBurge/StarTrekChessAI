@@ -30,7 +30,7 @@ class Castle(piece_class.Piece):
             **kwargs:-
                 team : str : Name of team that the piece is on
         '''
-        super().__init__(img_path+team+'-Castle.png', value, **kwargs)
+        super().__init__(img_path+team+'-Castle.png', value, team, **kwargs)
 
         self.moved = False
 

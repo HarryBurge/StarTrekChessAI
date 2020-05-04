@@ -59,6 +59,9 @@ class Map:
             except IndexError:
                 return False
 
+    def set_gridpoi(self, x,y,z, piece):
+        self._board[z][y][x] = piece
+
 
 
 if __name__ == '__main__':
