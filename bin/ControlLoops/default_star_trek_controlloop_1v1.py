@@ -1,6 +1,10 @@
 import time
 import copy
 
+from bin.Game.Pieces.StarTrekChess.king_s import King
+from bin.Game.Pieces.StarTrekChess.pawn_s import Pawn
+
+
 class ControlLoop:
 
     def __init__(self):
@@ -8,8 +12,10 @@ class ControlLoop:
         self.turn = 0
 
     def run(self, GameController):
+        #####
+        tom = 1
         while True:
-            time.sleep(0.1)
+            time.sleep(0.2)
 
             if len(GameController.instructions) == 1:
 
@@ -42,6 +48,9 @@ class ControlLoop:
                     GameController.board.move_piece(*GameController.instructions[0], *GameController.instructions[1])
                     GameController.visualliser.update_board(GameController.board)
 
+                    if type(GameController.board.get_gridpoi(*GameController.instructions[1])) == Pawn:
+                        GameController.board.get_gridpoi(*GameController.instructions[1]).moved = True
+
                     if self.turn < len(self.players) - 1:
                         self.turn += 1
                     else:
@@ -52,6 +61,14 @@ class ControlLoop:
                     GameController.visualliser.update_board(GameController.board)
 
                 GameController.instructions = []
+
+
+            if GameController.board.is_in_check(self.players[self.turn], King):
+                tom += 1
+                print('in check'+ str(tom))
+
+                if GameController.board.is_in_checkmate(self.players[self.turn], King):
+                    print('in checkmate')
 
 
     def _doMove_check(self, board, x1,y1,z1, x2,y2,z2):

@@ -48,9 +48,9 @@ class Castle(piece_class.Piece):
 
         for d in [-1, 1]:
 
-            valid_moves += self._rec_line(board, x+d, y, z, d,0,0)
-            valid_moves += self._rec_line(board, x, y+d, z, 0,d,0)
-            valid_moves += self._rec_line(board, x, y, z+d, 0,0,d)
+            valid_moves += self._rec_line_3D(board, x+d, y, z, d,0,0)
+            valid_moves += self._rec_line_3D(board, x, y+d, z, 0,d,0)
+            valid_moves += self._rec_line_3D(board, x, y, z+d, 0,0,d)
 
         return valid_moves
 

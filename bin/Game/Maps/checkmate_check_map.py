@@ -2,8 +2,8 @@ from bin.Game.Pieces.StarTrekChess import bishop_s, castle_s, king_s, knight_s, 
 
 map_size = (6, 10, 4)
 
-map_array = [[[castle_s.Castle(team='Black'),knight_s.Knight(team='Black'),'x','x',knight_s.Knight(team='Black'),castle_s.Castle(team='Black')],
-              [pawn_s.Pawn((0,1), team='Black'),pawn_s.Pawn((0,1), team='Black'),'x','x',pawn_s.Pawn((0,1), team='Black'),pawn_s.Pawn((0,1), team='Black')],
+map_array = [[['@','@','x','x','@','@'],
+              ['@','@','x','x','@','@'],
               ['x','x','x','x','x','x'],
               ['x','x','x','x','x','x'],
               ['x','x','x','x','x','x'],
@@ -14,9 +14,9 @@ map_array = [[[castle_s.Castle(team='Black'),knight_s.Knight(team='Black'),'x','
               ['x','x','x','x','x','x']],
 
              [['x','x','x','x','x','x'],
-              ['x',bishop_s.Bishop(team='Black'),queen_s.Queen(team='Black'),king_s.King(team='Black'),bishop_s.Bishop(team='Black'),'x'],
-              ['x',pawn_s.Pawn((0,1), team='Black'),pawn_s.Pawn((0,1), team='Black'),pawn_s.Pawn((0,1), team='Black'),pawn_s.Pawn((0,1), team='Black'),'x'],
-              ['x','@','@','@','@','x'],
+              ['x',queen_s.Queen(team='White'),'@','@','@','x'],
+              ['x','@',king_s.King(team='Black'),'@','@','x'],
+              ['x','@','@',castle_s.Castle(team='White'),castle_s.Castle(team='Black'),'x'],
               ['x','@','@','@','@','x'],
               ['x','x','x','x','x','x'],
               ['x','x','x','x','x','x'],
@@ -32,8 +32,8 @@ map_array = [[[castle_s.Castle(team='Black'),knight_s.Knight(team='Black'),'x','
               ['x','@','@','@','@','x'],
               ['x','@','@','@','@','x'],
               ['x','x','x','x','x','x'],
-              [pawn_s.Pawn((0,-1), team='White'),pawn_s.Pawn((0,-1), team='White'),'x','x',pawn_s.Pawn((0,-1), team='White'),pawn_s.Pawn((0,-1), team='White')],
-              [castle_s.Castle(team='White'),knight_s.Knight(team='White'),'x','x',knight_s.Knight(team='White'),castle_s.Castle(team='White')]],
+              ['@','@','x','x','@','@'],
+              ['@','@','x','x','@','@']],
 
              [['x','x','x','x','x','x'],
               ['x','x','x','x','x','x'],
@@ -42,6 +42,6 @@ map_array = [[[castle_s.Castle(team='Black'),knight_s.Knight(team='Black'),'x','
               ['x','x','x','x','x','x'],
               ['x','@','@','@','@','x'],
               ['x','@','@','@','@','x'],
-              ['x',pawn_s.Pawn((0,-1), team='White'),pawn_s.Pawn((0,-1), team='White'),pawn_s.Pawn((0,-1), team='White'),pawn_s.Pawn((0,-1), team='White'),'x'],
-              ['x',bishop_s.Bishop(team='White'),queen_s.Queen(team='White'),king_s.King(team='White'),bishop_s.Bishop(team='White'),'x'],
+              ['x','@','@','@','@','x'],
+              ['x','@','@',king_s.King(team='White'),'@','x'],
               ['x','x','x','x','x','x']]]

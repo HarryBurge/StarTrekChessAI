@@ -42,13 +42,15 @@ class Knight(piece_class.Piece):
         '''
         testable_moves = []
 
-        for i in ['dx', 'dy', 'dz']:
+        for dx in [-2,2]:
+            for dy in [-1,1]:
+                for dz in [-1,0,1]:
+                    testable_moves.append([x+dx,y+dy,z+dz])
 
-            for dx in ([-2,2] if i == 'dx' else [-1,1]):
-                for dy in ([-2,2] if i == 'dy' else [-1,1]):
-                    for dz in ([-2,2] if i == 'dz' else [-1,1]):
-
-                        testable_moves.append([x+dx,y+dy,z+dz])
+        for dx in [-1,1]:
+            for dy in [-2,2]:
+                for dz in [-1,0,1]:
+                    testable_moves.append([x+dx,y+dy,z+dz])
 
         return self._test_coords(board, testable_moves)
 

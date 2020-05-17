@@ -45,16 +45,31 @@ class Pawn(piece_class.Piece):
             [{'coords' : (int,int,int), 'mv_type' : str}, ...] : List of 
                 all moves that can be made from this piece
         '''
-        testable_moves = []
+        moves = []
 
         for dx in range(-1,2):
             for dy in range(-1,2):
                 for dz in range(-1,2):
 
-                    if numpy.dot(self.facing, [dx,dy,dz]) > 0:
-                        testable_moves.append([x+dx,y+dy,z+dz])
-            
-        return self._test_coords(board, testable_moves)
+                    if numpy.dot(self.facing, (dx,dy,dz)) > 0 and (dx,dy,dz) != self.facing:
+
+                        current = self._test_coord(board, x+dx,y+dy,z+dz)
+
+                        if current != False and current['mv_type'] == 'Take':
+                            moves.append(current)
+
+        dx, dy, dz = self.facing
+        current = self._test_coord(board, x+dx,y+dy,z+dz)
+
+        if current != False and current['mv_type'] == 'Move':
+            moves.append(current)
+
+            current = self._test_coord(board, x+dx*2,y+dy*2,z+dz*2)
+
+            if current != False and current['mv_type'] == 'Move':
+                moves.append(current)
+
+        return moves
 
 
 

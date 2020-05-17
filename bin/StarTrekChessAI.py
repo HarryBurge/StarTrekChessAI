@@ -6,6 +6,8 @@ from bin.ControlLoops import controller_class
 def main():
     map1 = map_class.Map('bin.Game.Maps.default_star_trek_map')
 
+    #map1 = map_class.Map('bin.Game.Maps.checkmate_check_map')
+
     control = controller_class.GameController('bin.ControlLoops.default_star_trek_controlloop_1v1', map1)
 
     control.run()

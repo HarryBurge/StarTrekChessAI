@@ -15,6 +15,8 @@ TODO:-
 
 # Imports
 import importlib
+import copy
+from bin.Game.Pieces.piece_class import Piece
 
 
 class Map:
@@ -61,6 +63,99 @@ class Map:
 
     def set_gridpoi(self, x,y,z, piece):
         self._board[z][y][x] = piece
+
+    
+    def is_in_check(self, team, king_class):
+
+        kings_coords = []
+        other_teams_coords = []
+
+        for z in range(len(self.get_board())):
+            for y in range(len(self.get_board()[0])):
+                for x in range(len(self.get_board()[0][0])):
+
+                    current = self.get_gridpoi(x,y,z)
+
+                    if type(current) == king_class and current.team == team:
+                        kings_coords.append((x,y,z))
+
+                    elif type(current) == king_class and current.team != team:
+                        
+                        for i in current.valid_move_coords_untested(self, x,y,z):
+                            other_teams_coords.append(i['coords'])
+
+                    elif issubclass(type(current), Piece) and current.team != team:
+                        
+                        for i in current.valid_move_coords(self, x,y,z):
+                            other_teams_coords.append(i['coords'])
+
+        for i in kings_coords:
+            if i in other_teams_coords:
+                return True
+        return False
+
+    def is_in_checkmate(self, team, king_class): #believe to be fine but need to fully test
+
+        # Checks whether king is in check currently
+        if self.is_in_check(team, king_class) == False:
+            return False
+
+        kings_coords = []
+        teams_moves = []
+
+        # Find all kings of colour type and moves that team can do
+        for z in range(len(self.get_board())):
+            for y in range(len(self.get_board()[0])):
+                for x in range(len(self.get_board()[0][0])):
+
+                    current = self.get_gridpoi(x,y,z)
+
+                    if type(current) == king_class and current.team == team:
+                        kings_coords.append((x,y,z))
+
+                    elif issubclass(type(current), Piece) and current.team == team:
+                        
+                        # Gets all moves that non kings on same team can make
+                        for i in current.valid_move_coords(self, x,y,z):
+                            teams_moves.append(((x,y,z), i['coords']))
+        
+        #print('\n--moves--\n' + str(teams_moves))
+        #input()
+                    
+
+        for king in kings_coords:
+
+            #print('\n--king--' + str(king))
+
+            current = self.get_gridpoi(*king)
+
+            valid_moves = current.valid_move_coords(self, *king)
+            #print('--king moves--' + str(valid_moves))
+
+            # If king can actually move somewhere
+            if valid_moves != []:
+                return False
+
+
+            # Does any other move team can make stop the check
+            for p1,p2 in teams_moves:
+                #print('checking move--' + str(p1) + '--' + str(p2))
+
+                simulated_board = copy.deepcopy(self)
+                simulated_board.move_piece(*p1, *p2)
+
+                if simulated_board.is_in_check(team, king_class) == False:
+                    #print('Returned false on check')
+                    #input()
+                    return False
+
+        #input()
+        return True
+
+
+                
+
+
 
 
 

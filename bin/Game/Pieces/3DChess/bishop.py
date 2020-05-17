@@ -47,7 +47,7 @@ class Bishop(piece_class.Piece):
             for dy in [-1,1]:
                 for dz in range(-1,2):
                     
-                    valid_moves += self._rec_line(board, x+dx, y+dy, z+dz, dx,dy,dz)
+                    valid_moves += self._rec_line_3D(board, x+dx, y+dy, z+dz, dx,dy,dz)
 
         return valid_moves
 

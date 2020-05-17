@@ -1,5 +1,5 @@
 '''
-Class for queen, inherits code for Piece
+Class for castle, inherits code for Piece
 '''
 
 __authour__ = 'Harry Burge'
@@ -11,6 +11,7 @@ __last_updated_date__ = '23/04/2020'
 '''
 TODO:-
 Img_path
+Add in castling
 
 '''
 
@@ -18,9 +19,9 @@ Img_path
 from bin.Game.Pieces import piece_class
 
 
-class Queen(piece_class.Piece):
+class Castle(piece_class.Piece):
 
-    def __init__(self, img_path='bin/Game/Pieces/imgs/', value=9, team='Netural', **kwargs):
+    def __init__(self, img_path='bin/Game/Pieces/imgs/', value=5, team='Netural', **kwargs):
         '''
         params:-
             img_path : str : Path to the folder where images are stores
@@ -29,7 +30,9 @@ class Queen(piece_class.Piece):
             **kwargs:-
                 team : str : Name of team that the piece is on
         '''
-        super().__init__(img_path+team+'-Queen.png', value, team, **kwargs)
+        super().__init__(img_path+team+'-Castle.png', value, team, **kwargs)
+
+        self.moved = False
 
 
     def valid_move_coords(self, board, x,y,z):
@@ -43,11 +46,16 @@ class Queen(piece_class.Piece):
         '''
         valid_moves = []
 
-        for dx in range(-1, 2):
-            for dy in range(-1,2):
-                for dz in range(-1,2):
-                    
-                    valid_moves += self._rec_line(board, x+dx, y+dy, z+dz, dx,dy,dz)
+        for dz in range(-1,2):
+            for d in [-1, 1]:
+
+                for i in self._rec_line_StarTrek(board, x+d, y, z+dz, d,0):
+                    if not(i in valid_moves):
+                        valid_moves.append(i)
+
+                for i in self._rec_line_StarTrek(board, x, y+d, z+dz, 0,d):
+                    if not(i in valid_moves):
+                        valid_moves.append(i)
 
         return valid_moves
 
