@@ -1,14 +1,14 @@
-from bin.Game.Maps import map_class
+from bin.Game.map_class import Map 
+from bin.Game.controller_class import GameController
 from bin.Visualliser import visualliser
-from bin.ControlLoops import controller_class
 
 
 def main():
-    map1 = map_class.Map('bin.Game.Maps.default_star_trek_map')
+    #map1 = Map('bin.Game.Maps.default_star_trek_map')
 
-    #map1 = map_class.Map('bin.Game.Maps.checkmate_check_map')
+    map1 = Map('bin.Game.Maps.checkmate_check_map')
 
-    control = controller_class.GameController('bin.ControlLoops.default_star_trek_controlloop_1v1', map1)
+    control = GameController('bin.Game.ControlLoops.default_star_trek_controlloop_1v1', map1)
 
     control.run()
 

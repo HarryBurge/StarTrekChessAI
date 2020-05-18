@@ -1,7 +1,5 @@
 from bin.Game.Pieces.StarTrekChess import bishop_s, castle_s, king_s, knight_s, pawn_s, queen_s
 
-map_size = (6, 10, 4)
-
 map_array = [[[castle_s.Castle(team='Black'),knight_s.Knight(team='Black'),'x','x',knight_s.Knight(team='Black'),castle_s.Castle(team='Black')],
               [pawn_s.Pawn((0,1), team='Black'),pawn_s.Pawn((0,1), team='Black'),'x','x',pawn_s.Pawn((0,1), team='Black'),pawn_s.Pawn((0,1), team='Black')],
               ['x','x','x','x','x','x'],

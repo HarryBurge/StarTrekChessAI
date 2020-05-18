@@ -16,7 +16,7 @@ add in castling
 '''
 
 # Imports
-from bin.Game.Pieces import piece_class
+from bin.Game import piece_class
 
 import copy
 
@@ -52,18 +52,20 @@ class King(piece_class.Piece):
             for dy in range(-1,2):
                 for dz in range(-1,2):
 
-                    current = self._test_coord(board, x+dx, y+dy, z+dz)
+                    if not(dx==0 and dy==0 and dz==0):
 
-                    if current != False and current['mv_type'] != 'Defending':
+                        current = self._test_coord(board, x+dx, y+dy, z+dz)
 
-                        simulated_map = copy.deepcopy(board)
-                        simulated_map.move_piece(x, y, z, x+dx, y+dy, z+dz)
+                        if current != False and current['mv_type'] != 'Defending':
 
-                        if not simulated_map.is_in_check(self.team, type(self)):
+                            simulated_map = copy.deepcopy(board)
+                            simulated_map.move_piece(x, y, z, x+dx, y+dy, z+dz)
+
+                            if not simulated_map.is_in_check(self.team, type(self)):
+                                testable_moves.append([x+dx,y+dy,z+dz])
+
+                        elif current != False and current['mv_type'] == 'Defending':
                             testable_moves.append([x+dx,y+dy,z+dz])
-
-                    elif current != False and current['mv_type'] == 'Defending':
-                        testable_moves.append([x+dx,y+dy,z+dz])
             
         return self._test_coords(board, testable_moves)
 
@@ -75,7 +77,8 @@ class King(piece_class.Piece):
             for dy in range(-1,2):
                 for dz in range(-1,2):
 
-                    testable_moves.append([x+dx,y+dy,z+dz])
+                    if not(dx==0 and dy==0 and dz==0):
+                        testable_moves.append([x+dx,y+dy,z+dz])
             
         return self._test_coords(board, testable_moves)
 

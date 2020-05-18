@@ -15,7 +15,7 @@ img_path
 '''
 
 # Imports
-from bin.Game.Pieces import piece_class
+from bin.Game import piece_class
 
 
 class Bishop(piece_class.Piece):

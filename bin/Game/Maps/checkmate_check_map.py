@@ -1,7 +1,5 @@
 from bin.Game.Pieces.StarTrekChess import bishop_s, castle_s, king_s, knight_s, pawn_s, queen_s
 
-map_size = (6, 10, 4)
-
 map_array = [[['@','@','x','x','@','@'],
               ['@','@','x','x','@','@'],
               ['x','x','x','x','x','x'],
@@ -14,10 +12,10 @@ map_array = [[['@','@','x','x','@','@'],
               ['x','x','x','x','x','x']],
 
              [['x','x','x','x','x','x'],
-              ['x',queen_s.Queen(team='White'),'@','@','@','x'],
-              ['x','@',king_s.King(team='Black'),'@','@','x'],
-              ['x','@','@',castle_s.Castle(team='White'),castle_s.Castle(team='Black'),'x'],
-              ['x','@','@','@','@','x'],
+              ['x',queen_s.Queen(team='White'),queen_s.Queen(team='White'),queen_s.Queen(team='White'),queen_s.Queen(team='White'),'x'],
+              ['x','@','@',king_s.King(team='Black'),'@','x'],
+              ['x',queen_s.Queen(team='Black'),'@','@','@','x'],
+              ['x','@','@',queen_s.Queen(team='White'),'@','x'],
               ['x','x','x','x','x','x'],
               ['x','x','x','x','x','x'],
               ['x','x','x','x','x','x'],
