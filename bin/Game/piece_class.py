@@ -14,6 +14,7 @@ class Piece:
         -Due to StarTrekChess not actually being 3D in terms of mechanics
             there has to be a seperate rec_line function for when someone
             wants to create a diffrent board and normal 3D movement
+        -New pieces need to have a valid_move_coords function
     '''
 
     def __init__(self, img_path=None, value=0, team='Neutral'):
@@ -28,7 +29,21 @@ class Piece:
         self.value = value
         self.img_path = img_path
 
+    
+    # Super Class things
+    def valid_move_coords(self, board, x,y,z):
+        '''
+        params:-
+            board : Map : Board with respect to
+            x,y,z : int : Coords of piece
+        returns:-
+            [] : This needs to get overidden by custom pieces but here just
+                incase someone doesn't
+        '''
+        return []
 
+
+    # Funcs
     def rec_line_3D(self, board, x,y,z, dx,dy,dz):
         '''
         params:-

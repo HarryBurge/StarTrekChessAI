@@ -139,16 +139,16 @@ class Board(ScreenManager):
         # will hold all squares created by below function for later callback
         self.squares = []
 
-        for z in range(len(board.get_board())):
+        for z in range(len(board._get_board_array())):
 
             # creates screen for that level
             level_screen = Screen(name='Level{}'.format(z))
 
             # holds sqaures in gridlayout for that level
-            level_board = GridLayout(rows=len(board.get_board()[0]), cols=len(board.get_board()[0][0]))
+            level_board = GridLayout(rows=len(board._get_board_array()[0]), cols=len(board._get_board_array()[0][0]))
 
-            for y in range(len(board.get_board()[0])):
-                for x in range(len(board.get_board()[0][0])):
+            for y in range(len(board._get_board_array()[0])):
+                for x in range(len(board._get_board_array()[0][0])):
 
                     current = board.get_gridpoi(x,y,z)
 
@@ -174,7 +174,7 @@ class Board(ScreenManager):
             num : int : level number to jump to
             board : Map : used to check whether num is to high or low
         '''
-        if num >= 0 and num < len(board.get_board()):
+        if num >= 0 and num < len(board._get_board_array()):
             self.level = num
             self.current = 'Level' + str(num)
 

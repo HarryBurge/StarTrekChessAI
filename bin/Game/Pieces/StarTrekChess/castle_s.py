@@ -1,38 +1,27 @@
-'''
-Class for castle, inherits code for Piece
-'''
-
 __authour__ = 'Harry Burge'
 __date_created__ = '16/04/2020'
 __last_updated_by__ = 'Harry Burge'
-__last_updated_date__ = '23/04/2020'
-
-
-'''
-TODO:-
-Img_path
-Add in castling
-
-'''
+__last_updated_date__ = '19/05/2020'
 
 # Imports
-from bin.Game import piece_class
+from bin.Game.piece_class import Piece
+from bin.Utils.game_util import loops
 
 
-class Castle(piece_class.Piece):
+# Castle
+class Castle(Piece):
+    '''
+    Class for castle, inherits code for Piece
+    '''
 
-    def __init__(self, img_path='bin/Game/Pieces/imgs/', value=5, team='Netural', **kwargs):
+    def __init__(self, img_path='bin/Game/Pieces/imgs/', value=5, team='Netural'):
         '''
         params:-
             img_path : str : Path to the folder where images are stores
             value : int : Value assigned to the piece
-
-            **kwargs:-
-                team : str : Name of team that the piece is on
+            team : str : Name of team that the piece is on
         '''
-        super().__init__(img_path+team+'-Castle.png', value, team, **kwargs)
-
-        self.moved = False
+        super().__init__(img_path+team+'-Castle.png', value, team)
 
 
     def valid_move_coords(self, board, x,y,z):
@@ -46,16 +35,17 @@ class Castle(piece_class.Piece):
         '''
         valid_moves = []
 
-        for dz in range(-1,2):
-            for d in [-1, 1]:
+        for dz, d in loops(range(-1,2), [-1, 1]):
 
-                for i in self._rec_line_StarTrek(board, x+d, y, z+dz, d,0):
-                    if not(i in valid_moves):
-                        valid_moves.append(i)
+            # Checks along dx
+            for i in self.rec_line_StarTrek(board, x+d, y, z+dz, d,0):
+                if not(i in valid_moves):
+                    valid_moves.append(i)
 
-                for i in self._rec_line_StarTrek(board, x, y+d, z+dz, 0,d):
-                    if not(i in valid_moves):
-                        valid_moves.append(i)
+            # Checks along dy
+            for i in self.rec_line_StarTrek(board, x, y+d, z+dz, 0,d):
+                if not(i in valid_moves):
+                    valid_moves.append(i)
 
         return valid_moves
 

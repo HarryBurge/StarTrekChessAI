@@ -8,6 +8,7 @@ import importlib
 import copy
 
 from bin.Game.piece_class import Piece
+from bin.Utils.game_util import loops
 
 
 # Map
@@ -71,13 +72,11 @@ class Map:
         '''
         all_pieces = []
 
-        for z in range(self._size[2]):
-            for y in range(self._size[1]):
-                for x in range(self._size[0]):
+        for x,y,z in loops(range(self._size[0]), range(self._size[1]), range(self._size[2])):
 
-                    # Check if at x,y,z in board it is a subclass of Piece
-                    if issubclass(type(self.get_gridpoi(x,y,z)), Piece):
-                        all_pieces.append( ((x,y,z), self.get_gridpoi(x,y,z)) )
+            # Check if at x,y,z in board it is a subclass of Piece
+            if issubclass(type(self.get_gridpoi(x,y,z)), Piece):
+                all_pieces.append( ((x,y,z), self.get_gridpoi(x,y,z)) )
 
         return all_pieces
 
@@ -93,7 +92,7 @@ class Map:
 
     
     # Setters
-    def _set_gridpoi(self, x,y,z, piece):
+    def set_gridpoi(self, x,y,z, piece):
         '''
         params:-
             x,y,z : int : Coords to be replaced
@@ -135,10 +134,10 @@ class Map:
             taken_piece = self.get_gridpoi(x2,y2,z2)
 
             # Move coords1 to coords 2
-            self._set_gridpoi(x2,y2,z2, self.get_gridpoi(x1,y1,z1))
+            self.set_gridpoi(x2,y2,z2, self.get_gridpoi(x1,y1,z1))
 
             # Make coords 1 a free space
-            self._set_gridpoi(x1,y1,z1, '@')
+            self.set_gridpoi(x1,y1,z1, '@')
 
             return taken_piece
 

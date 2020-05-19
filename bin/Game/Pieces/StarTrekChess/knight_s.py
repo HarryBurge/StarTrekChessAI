@@ -1,34 +1,27 @@
-'''
-Class for knight, inherits code for Piece
-'''
-
 __authour__ = 'Harry Burge'
 __date_created__ = '16/04/2020'
 __last_updated_by__ = 'Harry Burge'
-__last_updated_date__ = '23/04/2020'
-
-'''
-TODO:-
-Img_path
-
-'''
+__last_updated_date__ = '19/05/2020'
 
 # Imports
-from bin.Game import piece_class
+from bin.Game.piece_class import Piece
+from bin.Utils.game_util import loops
 
 
-class Knight(piece_class.Piece):
+# Knight
+class Knight(Piece):
+    '''
+    Class for knight, inherits code for Piece
+    '''
 
-    def __init__(self, img_path='bin/Game/Pieces/imgs/', value=3, team='Netural', **kwargs):
+    def __init__(self, img_path='bin/Game/Pieces/imgs/', value=3, team='Netural'):
         '''
         params:-
             img_path : str : Path to the folder where images are stores
             value : int : Value assigned to the piece
-
-            **kwargs:-
-                team : str : Name of team that the piece is on
+            team : str : Name of team that the piece is on
         '''
-        super().__init__(img_path+team+'-Knight.png', value, team, **kwargs)
+        super().__init__(img_path+team+'-Knight.png', value, team)
 
 
     def valid_move_coords(self, board, x,y,z):
@@ -42,17 +35,17 @@ class Knight(piece_class.Piece):
         '''
         testable_moves = []
 
-        for dx in [-2,2]:
-            for dy in [-1,1]:
-                for dz in [-1,0,1]:
-                    testable_moves.append([x+dx,y+dy,z+dz])
+        # Creates all moves that horse could create on x axis
 
-        for dx in [-1,1]:
-            for dy in [-2,2]:
-                for dz in [-1,0,1]:
-                    testable_moves.append([x+dx,y+dy,z+dz])
+        for dx, dy, dz in loops([-2,2], [-1,1], [-1,0,1]):
+            testable_moves.append([x+dx,y+dy,z+dz])
 
-        return self._test_coords(board, testable_moves)
+        # Creates all moves that horse could create on y axis
+        for dx, dy, dz in loops([-1,1], [-2,2], [-1,0,1]):
+            testable_moves.append([x+dx,y+dy,z+dz])
+
+        # Tests all moves
+        return self.test_coords(board, testable_moves)
 
 
 

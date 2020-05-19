@@ -6,9 +6,11 @@ __last_updated_date__ = '18/05/2020'
 # Imports
 import importlib
 import threading
+import copy
 
 from bin.Visualliser import visualliser
 from bin.Game.map_class import Map
+from bin.Game.piece_class import Piece
 
 
 # GameController
@@ -18,10 +20,16 @@ class GameController:
 
     Info:-
         -Control loop files need to have a run function which is a loop
-        due to kivy stopping all execution on run thread.
+        due to kivy (This is cause of the current visualliser using kivy)
+        stopping all execution on run thread.
+        -Visualliser needs to have run option
+        -Visualliser file needs to have a class Visualliser
+        -Visualliser needs to have update_board(<Map>) also needs to be able
+        to handle showing valid move coords which comes in the form
+        ['M'|'D'|'T', str|Piece_subclass]
     '''
 
-    def __init__(self, controlloop_path, map_path, visualliser_path=None):
+    def __init__(self, id, controlloop_path, map_path, visualliser_path=None):
         '''
         params:-
             controlloop_path : str : Import path to the controlloop 
@@ -31,31 +39,84 @@ class GameController:
                 import path to the visualliser (This is a placeholder for 
                 when there are diffrent visuals and if simulating without one)
         '''
-        # Import specfifc control loop and visualliser if required
+        # Import specfifc control loop
         self.controlloop = importlib.import_module(controlloop_path).ControlLoop()
 
+        # Create specfic map
+        self.map = Map(map_path)
+
+        # Import specfifc visualliser, none if not required
         if visualliser_path != None:
-            self.visualliser = importlib.import_module(visualliser_path).Visualliser(map, self)
+            self.visualliser = importlib.import_module(visualliser_path).Visualliser(self.map, self)
         else:
             self.visualliser = None
 
-        self.map = Map(map_path)
+        self.id = id
         self.instructions = []
 
 
+    # Getters
+    def get_id(self):
+        return self.id
+
+    def get_controlloop(self):
+        return self.controlloop
+
+    def get_map(self):
+        return self.map
+    
+    def get_visualliser(self):
+        if self.visualliser == None:
+            return False
+        return self.visualliser
+
+
+    # Interfaces
+    # Map getters
+    def get_gridpoi(self, x, y, z):
+        return self.get_map().get_gridpoi(x,y,z)
+
+    def get_valid_move_coords(self, x,y,z):
+        return self.get_gridpoi(x,y,z).valid_move_coords(self.get_map(), x,y,z)
+    
+    def get_all_pieces(self):
+        return self.get_map().get_all_pieces()
+
+    # Map setters
+    def set_gridpoi(self, x,y,z, piece):
+        return self.get_map().set_gridpoi(x,y,z, piece)
+
+    # Map funcs
+    def move_piece(self, x1,y1,z1, x2,y2,z2):
+        return self.get_map().move_piece(x1,y1,z1, x2,y2,z2)
+
+    def is_in_check(self, team, king_class):
+        return self.get_map().is_in_check(team, king_class)
+
+    def is_in_checkmate(self, team, king_class):
+        return self.get_map().is_in_checkmate(team, king_class)
+
+    # Visulliser funcs
+    def update_board(self, board):
+        return self.get_visualliser().update_board(board)
+
+
+    # Starter
     def run(self):
         '''
         params:- 
             None
         returns:-
-            None
+            None : Starts up code execution of the gamecontroller
         '''
-        threading._start_new_thread(self.controlloop.run, (self,))
+        if self.get_visualliser() != False:
+            threading._start_new_thread(self.get_controlloop().run, (self,))
+            threading._start_new_thread(self.get_visualliser().run(), ())
+        else:
+            self.get_controlloop().run(self)
 
-        if self.visualliser != None:
-            threading._start_new_thread(self.visualliser.run(), ())
 
-
+    # UI - Passing
     def clicked(self, x,y,z):
         '''
         params:-
@@ -65,6 +126,127 @@ class GameController:
             None
         '''
         self.instructions.append([x,y,z])
+
+
+    # Comaparitors
+    def is_in_valid_moves(self, moves, x,y,z, mv_type):
+        '''
+        params:-
+            moves : [{'coords' : (int,int,int), 'mv_type' : str}, ...] : Moves 
+                to search through
+            x,y,z : int : Coords to search through
+            mv_type : [str, ...] : If coord and one of mv_type
+        returns:-
+            bool : True is found in moves and False if not
+        '''
+        found = False
+
+        for i in moves:
+            if i['mv_type'] in mv_type and i['coords'] == (x,y,z):
+                found = True
+
+        return found
+
+
+    def is_team(self, x,y,z, teams_turn):
+        '''
+        params:-
+            x,y,z : int : Gridpoi of thing selected
+            teams_turn : str : Teams turn
+        returns:-
+            bool : True if thing at x,y,z is the same teams as teams_turn
+                False otherwise
+        '''
+        current = self.get_gridpoi(x,y,z)
+
+        if issubclass(type(current), Piece) and current.team == teams_turn:
+            return True
+        return False
+
+
+    def can_move(self, x1,y1,z1, x2,y2,z2, teams_turn):
+        '''
+        params:-
+            x1,y1,z1 : int : Moving piece
+            x2,y2,z2 : int : Place to move to
+            teams_turn : str : Current teams turn
+        returns:-
+            bool : True if move can be made else False
+        '''
+        current = self.get_gridpoi(x1,y1,z1)
+
+        if issubclass(type(current), Piece) and self.is_in_valid_moves(
+                                                    self.get_valid_move_coords(x1,y1,z1), 
+                                                    x2,y2,z2,
+                                                    ('Take', 'Move')):
+            return True
+        return False
+
+
+    # Funcs
+    def show_valid_moves(self, x,y,z, teams_turn):
+        '''
+        params:-
+            x,y,z : int : Coords on board to show valid moves of
+            teams_turn : What teams turn is it
+        returns:-
+            bool : True if its shown the valid moves on the board
+                False if its failed due to coords being wrong, not being a piece
+                or even a visualliser not exsiting
+        '''
+        if self.get_visualliser() != False and self.is_team(x,y,z, teams_turn):
+
+            simulated_map = copy.deepcopy(self.get_map())
+            validmoves = simulated_map.get_gridpoi(x,y,z).valid_move_coords(simulated_map, x,y,z)
+
+            # For all moves change the copied boards coords to have a list that can later be used
+            # by a visualliser to show valid move coords
+            for i in validmoves:
+
+                if i['mv_type'] == 'Defending':
+                    simulated_map.set_gridpoi( *i['coords'], 
+                                                ['D', simulated_map.get_gridpoi(*i['coords'])])
+
+                elif i['mv_type'] == 'Move':
+                    simulated_map.set_gridpoi( *i['coords'], 
+                                                ['M', simulated_map.get_gridpoi(*i['coords'])])
+
+                elif i['mv_type'] == 'Take':
+                    simulated_map.set_gridpoi( *i['coords'], 
+                                                ['T', simulated_map.get_gridpoi(*i['coords'])])
+
+            # Shows the simulated board
+            self.get_visualliser().update_board(simulated_map)
+
+            return True
+
+        return False
+
+
+    def do_move(self, x1,y1,z1, x2,y2,z2, teams_turn, moved_pieces):
+        '''
+        params:-
+            x1,y1,z1 : int : Piece to move
+            x2,y2,z2 : int : Place to move to
+            teams_turn : Current teams turn
+            moved_pieces : Piece_subclasses : If Piece needs to have moved set
+        returns:-
+            bool : True if succsessfully moved, False otherwise
+        '''
+        if self.can_move(x1,y1,z1, x2,y2,z2, teams_turn):
+            self.move_piece(x1,y1,z1, x2,y2,z2)
+
+            # If visualliser then update screen
+            if self.get_visualliser() != False:
+                self.get_visualliser().update_board(self.get_map())
+
+            # If the piece is a piece that needs to track if moved
+            if type(self.get_gridpoi(x2,y2,z2)) in moved_pieces:
+                self.get_gridpoi(x2,y2,z2).moved = True
+            
+            return True
+
+        return False
  
 
 if __name__ == '__main__':
