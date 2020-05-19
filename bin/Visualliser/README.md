@@ -1,0 +1,1 @@
+This is an example of a visualliser however it is poorly coded and was only quickly made to debug easier. The code is terrible due to being to specific on circumstance and has hardly any error checking. Will be revisted to make alot better.

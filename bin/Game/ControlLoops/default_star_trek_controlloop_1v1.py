@@ -14,7 +14,6 @@ class ControlLoop:
     def run(self, GameController):
         while True:
             time.sleep(0.2)
-            print(GameController.get_id())
 
             if len(GameController.instructions) == 1:
 
