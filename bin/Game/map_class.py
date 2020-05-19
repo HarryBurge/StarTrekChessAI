@@ -6,6 +6,7 @@ __last_updated_date__ = '18/05/2020'
 # Imports
 import importlib
 import copy
+
 from bin.Game.piece_class import Piece
 
 
