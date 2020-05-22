@@ -26,4 +26,3 @@ Therefore the Visualiser is pretty horrendous and quickly made to debug easier. 
 - Deteministic AI
 - Neural Net AI with training modes
 - Cluster computing training
-- Make default_startrek_controlloop actaully play like you would expect

@@ -223,7 +223,7 @@ class GameController:
         return False
 
 
-    def do_move(self, x1,y1,z1, x2,y2,z2, teams_turn, moved_pieces):
+    def do_move(self, x1,y1,z1, x2,y2,z2, teams_turn, moved_pieces, king_class):
         '''
         params:-
             x1,y1,z1 : int : Piece to move
@@ -234,6 +234,15 @@ class GameController:
             bool : True if succsessfully moved, False otherwise
         '''
         if self.can_move(x1,y1,z1, x2,y2,z2, teams_turn):
+
+            # Simulate move
+            simulated_map = copy.deepcopy(self.get_map())
+            simulated_map.move_piece(x1,y1,z1, x2,y2,z2)
+
+            # Can't move if it leads to self check
+            if simulated_map.is_in_check(teams_turn, king_class):
+                return False
+
             self.move_piece(x1,y1,z1, x2,y2,z2)
 
             # If visualliser then update screen

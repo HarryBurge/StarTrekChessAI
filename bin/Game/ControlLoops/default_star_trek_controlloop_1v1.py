@@ -12,7 +12,10 @@ class ControlLoop:
         self.turn = 0
 
     def run(self, GameController):
-        while True:
+
+        loop = True
+
+        while loop:
             time.sleep(0.2)
 
             if len(GameController.instructions) == 1:
@@ -26,7 +29,7 @@ class ControlLoop:
 
             elif len(GameController.instructions) == 2:
 
-                if GameController.do_move(*GameController.instructions[0], *GameController.instructions[1], self.players[self.turn], [Pawn]):
+                if GameController.do_move(*GameController.instructions[0], *GameController.instructions[1], self.players[self.turn], [Pawn], King):
                     if self.turn < len(self.players) - 1:
                         self.turn += 1
                     else:
@@ -40,7 +43,8 @@ class ControlLoop:
 
 
             if GameController.is_in_check(self.players[self.turn], King):
-                print('in check')
+                print(self.players[self.turn] + ' is in check')
 
                 if GameController.is_in_checkmate(self.players[self.turn], King):
-                    print('in checkmate')
+                    print(self.players[self.turn] + ' is in checkmate')
+                    loop = False
