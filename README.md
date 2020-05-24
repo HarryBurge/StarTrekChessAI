@@ -15,7 +15,7 @@ Therefore the Visualiser is pretty horrendous and quickly made to debug easier. 
 
 ## Requirements
 - Kivy (For graphics, not needed unless you want to use pre-built visualliser)
-- Numpy
+- Numpy (Removed in dev branch due to ARM Processors being used for remote processing)
 
 
 ## To Do List

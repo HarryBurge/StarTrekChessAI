@@ -4,7 +4,6 @@ __last_updated_by__ = 'Harry Burge'
 __last_updated_date__ = '19/05/2020'
 
 # Imports
-import numpy
 
 from bin.Game.piece_class import Piece
 from bin.Utils.game_util import loops
@@ -61,7 +60,7 @@ class Pawn(Piece):
 
                 # Checks whether diffrence between facing and dx,dy is less than 90 degress
                 # And are not equal
-                if numpy.dot(self.facing, (dx,dy)) > 0 and (dx,dy) != self.facing:
+                if sum([i*j for (i, j) in zip(self.facing, [dx,dy])]) > 0 and (dx,dy) != self.facing:
 
                     current = self.test_coord(board, x+dx,y+dy,z+dz)
 

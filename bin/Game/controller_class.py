@@ -8,7 +8,6 @@ import importlib
 import threading
 import copy
 
-from bin.Visualliser import visualliser
 from bin.Game.map_class import Map
 from bin.Game.piece_class import Piece
 

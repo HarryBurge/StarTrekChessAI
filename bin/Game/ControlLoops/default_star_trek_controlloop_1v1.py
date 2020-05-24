@@ -13,7 +13,7 @@ class ControlLoop:
 
     def run(self, GameController):
 
-        loop = True
+        loop = False
 
         while loop:
             time.sleep(0.2)
