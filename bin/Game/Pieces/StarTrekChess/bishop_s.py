@@ -36,7 +36,7 @@ class Bishop(piece_class.Piece):
 
         for dx,dy,dz in loops([-1,1], [-1,1], range(-1,2)):
                         
-            for i in self.rec_line_StarTrek(board, x+dx, y+dy, z+dz, dx,dy):
+            for i in self.rec_line_StarTrek(board, x+dx, y+dy, z+dz, dx,dy, []):
                 if not(i in valid_moves):
                     valid_moves.append(i)
 

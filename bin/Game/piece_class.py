@@ -67,12 +67,13 @@ class Piece:
             return [current]
 
 
-    def rec_line_StarTrek(self, board, x,y,z, dx,dy):
+    def rec_line_StarTrek(self, board, x,y,z, dx,dy, _tested_coords):
         '''
         params:-
             board : Map : Board of which is respect to
             x,y,z : int : Coords on board to check on this recursive call
             dx,dy : int : Recusivly moves along line defined by diffrences
+            _tested_coords : [] : Has to be passed in due to acting like a global
         returns:-
             [{'coords' : (int,int,int), 'mv_type' : str}, ...] : List of all moves
                 that can be made along this line after recursive call has finished.
@@ -81,25 +82,28 @@ class Piece:
                 on the line a free space above and below. This needs to be accounted
                 for whilst using this function.
         '''
-        current = self.test_coord(board, x,y,z)
-
-        if current == False:
+        if (x,y,z) in _tested_coords:
             return []
-
-        elif current['mv_type'] == 'Move':
-            temp = []
-
-            # Same as rec_line_3D but now has to account for that -+1 diffrence in z
-            for dz in [-1,0,1]:
-                temp += self.rec_line_StarTrek(board, x+dx, y+dy, z+dz, dx, dy)
-            return [current] + temp
-
         else:
-            # Same as rec_line_3D but now has to account for that -+1 diffrence in z
+            _tested_coords.append((x,y,z))
+
+            current = self.test_coord(board, x,y,z)
+
             temp = []
 
-            for dz in [-1,1]:
-                temp += self.rec_line_StarTrek(board, x+dx, y+dy, z+dz, dx, dy)
+            if current == False:
+                return []
+
+            elif current['mv_type'] == 'Move':
+                # Same as rec_line_3D but now has to account for that -+1 diffrence in z
+                for dz in [-1,0,1]:
+                    temp += self.rec_line_StarTrek(board, x+dx, y+dy, z+dz, dx, dy, _tested_coords)
+
+            else:
+                # Same as rec_line_3D but now has to account for that -+1 diffrence in z
+                for dz in [-1,1]:
+                    temp += self.rec_line_StarTrek(board, x, y, z+dz, dx, dy, _tested_coords)
+
             return [current] + temp
 
 

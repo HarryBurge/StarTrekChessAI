@@ -41,7 +41,7 @@ class Queen(Piece):
                 
                 # Due to being StarTrek movement repeats can come from this func
                 # so needs to be filtered
-                for i in self.rec_line_StarTrek(board, x+dx, y+dy, z+dz, dx,dy):
+                for i in self.rec_line_StarTrek(board, x+dx, y+dy, z+dz, dx,dy,[]):
                     if not(i in valid_moves):
                         valid_moves.append(i)
 

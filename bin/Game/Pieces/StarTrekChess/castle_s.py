@@ -38,12 +38,12 @@ class Castle(Piece):
         for dz, d in loops(range(-1,2), [-1, 1]):
 
             # Checks along dx
-            for i in self.rec_line_StarTrek(board, x+d, y, z+dz, d,0):
+            for i in self.rec_line_StarTrek(board, x+d, y, z+dz, d,0, []):
                 if not(i in valid_moves):
                     valid_moves.append(i)
 
             # Checks along dy
-            for i in self.rec_line_StarTrek(board, x, y+d, z+dz, 0,d):
+            for i in self.rec_line_StarTrek(board, x, y+d, z+dz, 0,d, []):
                 if not(i in valid_moves):
                     valid_moves.append(i)
 

@@ -5,7 +5,6 @@ __last_updated_date__ = '18/05/2020'
 
 # Imports
 import importlib
-import threading
 import copy
 
 from bin.Game.map_class import Map
@@ -28,7 +27,7 @@ class GameController:
         ['M'|'D'|'T', str|Piece_subclass]
     '''
 
-    def __init__(self, id, controlloop_path, map_path, visualliser_path=None):
+    def __init__(self, id, controlloop_path, map_path):
         '''
         params:-
             controlloop_path : str : Import path to the controlloop 
@@ -44,11 +43,7 @@ class GameController:
         # Create specfic map
         self.map = Map(map_path)
 
-        # Import specfifc visualliser, none if not required
-        if visualliser_path != None:
-            self.visualliser = importlib.import_module(visualliser_path).Visualliser(self.map, self)
-        else:
-            self.visualliser = None
+        self.visualliser = None
 
         self.id = id
         self.instructions = []
@@ -68,6 +63,11 @@ class GameController:
         if self.visualliser == None:
             return False
         return self.visualliser
+
+    
+    # Setters
+    def set_visualliser(self, visualliser):
+        self.visualliser = visualliser
 
 
     # Interfaces
@@ -97,7 +97,7 @@ class GameController:
 
     # Visulliser funcs
     def update_board(self, board):
-        return self.get_visualliser().update_board(board)
+        return self.get_visualliser().update_board(self, board)
 
 
     # Starter
@@ -108,11 +108,7 @@ class GameController:
         returns:-
             None : Starts up code execution of the gamecontroller
         '''
-        if self.get_visualliser() != False:
-            threading._start_new_thread(self.get_controlloop().run, (self,))
-            threading._start_new_thread(self.get_visualliser().run(), ())
-        else:
-            self.get_controlloop().run(self)
+        self.get_controlloop().run(self)
 
 
     # UI - Passing
@@ -215,7 +211,7 @@ class GameController:
                                                 ['T', simulated_map.get_gridpoi(*i['coords'])])
 
             # Shows the simulated board
-            self.get_visualliser().update_board(simulated_map)
+            self.get_visualliser().update_board(self, simulated_map)
 
             return True
 
@@ -246,7 +242,7 @@ class GameController:
 
             # If visualliser then update screen
             if self.get_visualliser() != False:
-                self.get_visualliser().update_board(self.get_map())
+                self.get_visualliser().update_board(self, self.get_map())
 
             # If the piece is a piece that needs to track if moved
             if type(self.get_gridpoi(x2,y2,z2)) in moved_pieces:

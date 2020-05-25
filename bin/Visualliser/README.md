@@ -1,1 +1,1 @@
-This is an example of a visualliser however it is poorly coded and was only quickly made to debug easier. The code is terrible due to being to specific on circumstance and has hardly any error checking. Will be revisted to make alot better.
+Visualliser2 is standard however can be done with Visualliser(1) however is not supported anymore at might not run in the future.
