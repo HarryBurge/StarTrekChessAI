@@ -42,9 +42,9 @@ class ControlLoop:
                 GameController.instructions = []
 
 
-            # if GameController.is_in_check(self.players[self.turn], King):
-            #     print(self.players[self.turn] + ' is in check')
+            if GameController.is_in_check(self.players[self.turn], King):
+                print(self.players[self.turn] + ' is in check')
 
-            #     if GameController.is_in_checkmate(self.players[self.turn], King):
-            #         print(self.players[self.turn] + ' is in checkmate')
-            #         loop = False
+                if GameController.is_in_checkmate(self.players[self.turn], King):
+                    print(self.players[self.turn] + ' is in checkmate')
+                    loop = False
