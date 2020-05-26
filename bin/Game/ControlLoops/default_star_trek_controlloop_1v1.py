@@ -1,6 +1,8 @@
 import time
 import copy
 
+from random import randint
+
 from bin.Game.Pieces.StarTrekChess.king_s import King
 from bin.Game.Pieces.StarTrekChess.pawn_s import Pawn
 
@@ -16,7 +18,19 @@ class ControlLoop:
         loop = True
 
         while loop:
-            time.sleep(0.2)
+            # time.sleep(0.2)
+
+            if len(GameController.get_all_pieces())-1 > 0:
+                selected_piece = GameController.get_all_pieces()[randint(0, len(GameController.get_all_pieces())-1)]
+                coords1 = selected_piece[0]
+                valid_moves = selected_piece[1].valid_move_coords(GameController.get_map(), *coords1)
+
+                if len(valid_moves)-1 > 0:
+                    coords2 = valid_moves[randint(0, len(valid_moves)-1)]['coords']
+
+                    GameController.clicked(*coords1)
+                    GameController.clicked(*coords2)
+
 
             if len(GameController.instructions) == 1:
 
@@ -42,9 +56,9 @@ class ControlLoop:
                 GameController.instructions = []
 
 
-            # if GameController.is_in_check(self.players[self.turn], King):
-            #     print(self.players[self.turn] + ' is in check')
+            if GameController.is_in_check(self.players[self.turn], King):
+                print(self.players[self.turn] + ' is in check')
 
-            #     if GameController.is_in_checkmate(self.players[self.turn], King):
-            #         print(self.players[self.turn] + ' is in checkmate')
-            #         loop = False
+                if GameController.is_in_checkmate(self.players[self.turn], King):
+                    print(self.players[self.turn] + ' is in checkmate')
+                    loop = False
