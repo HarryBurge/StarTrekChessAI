@@ -16,9 +16,10 @@ class ControlLoop:
     def run(self, GameController):
 
         loop = True
+        time.sleep(2)
 
         while loop:
-            # time.sleep(0.2)
+            time.sleep(0.2)
 
             if len(GameController.get_all_pieces())-1 > 0:
                 selected_piece = GameController.get_all_pieces()[randint(0, len(GameController.get_all_pieces())-1)]
