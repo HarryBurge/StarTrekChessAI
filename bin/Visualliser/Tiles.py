@@ -10,17 +10,6 @@ from kivy.uix.widget import Widget
 
 # Canvas (graphics) setting
 Builder.load_string("""
-<BackgroundColor>:
-    background_color: 1,1,1,1
-
-    canvas.before:
-        Color:
-            rgba: root.background_color
-        Rectangle:
-            size: self.size
-            pos: self.pos
-
-
 <Square>:
     background_color: 1,1,1,1
     background_normal: ''

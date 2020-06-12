@@ -9,6 +9,7 @@ import copy
 
 from bin.Game.piece_class import Piece
 from bin.Utils.game_util import loops
+from bin.Game.attack_board_class import AttackBoard
 
 
 # Map
@@ -35,6 +36,7 @@ class Map:
         map_file = importlib.import_module(path)
 
         self._board = map_file.map_array
+        self._attackmap = map_file.attack_boards_array
 
         # Size of (x,y,z)
         self._size = (len(self._board[0][0]), 
@@ -58,6 +60,22 @@ class Map:
         else:
             try:
                 return self._board[z][y][x]
+            except IndexError:
+                return False
+
+    
+    def get_attack_gridpoi(self, ax, ay):
+        '''
+        params:-
+
+        returns:-
+        '''
+        # Python excepts negative numbers which we don't want
+        if ax < 0 or ay < 0:
+            return False
+        else:
+            try:
+                return self._attackmap[ay][ax]
             except IndexError:
                 return False
 
@@ -110,6 +128,17 @@ class Map:
             except IndexError:
                 return False
 
+    
+    def set_attack_gridpoi(self, ax, ay, board):
+        # Python excepts negative numbers which we don't want
+        if ax < 0 or ay < 0:
+            return False
+        else:
+            try:
+                self._attackmap[ay][ax] = board
+            except IndexError:
+                return False
+
 
     # Funcs
     def move_piece(self, x1, y1, z1, x2, y2, z2):
@@ -140,6 +169,33 @@ class Map:
             self.set_gridpoi(x1,y1,z1, '@')
 
             return taken_piece
+
+
+    def move_attack_board(self, ax1, ay1, ax2, ay2):
+
+        if ax1 < 0 or ay1 < 0 or ax2 < 0 or ay2 < 0:
+            return False
+
+        elif self.get_attack_gridpoi(ax1, ay1) == False or self.get_attack_gridpoi(ax2, ay2) == False:
+            return False
+
+        elif not(type(self.get_attack_gridpoi(ax1, ay1)) == AttackBoard and type(self.get_attack_gridpoi(ax2, ay2)) == tuple):
+            return False
+
+        else:
+            # Gets actual board coords
+            x1,y1,z1 = self.get_attack_gridpoi(ax1, ay1).get_coords()
+            x2,y2,z2 = self.get_attack_gridpoi(ax2, ay2)
+
+            # Moves board in attack map
+            self.set_attack_gridpoi(ax2, ay2, self.get_attack_gridpoi(ax1, ay1))
+            self.get_attack_gridpoi(ax2, ay2).set_coords(x2,y2,z2)
+            self.set_attack_gridpoi(ax1, ay1, (x1,y1,z1))
+
+            # Moves x1,y1,z1 to x2,y2,z2 factoring in the area of attack board
+            for dx,dy,dz in self.get_attack_gridpoi(ax2, ay2).get_diffrence_area_coords():
+                self.set_gridpoi(x2+dx, y2+dy, z2+dz, self.get_gridpoi(x1+dx, y1+dy, z1+dz))
+                self.set_gridpoi(x1+dx, y1+dy, z1+dz, 'x')
 
     
     def is_in_check(self, team, king_class):

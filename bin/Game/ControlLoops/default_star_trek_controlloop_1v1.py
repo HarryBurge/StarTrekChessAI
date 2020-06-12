@@ -18,24 +18,30 @@ class ControlLoop:
         loop = True
         time.sleep(2)
 
+        count = 10
+
         while loop:
             time.sleep(0.2)
 
-            if len(GameController.get_all_pieces())-1 > 0:
-                selected_piece = GameController.get_all_pieces()[randint(0, len(GameController.get_all_pieces())-1)]
-                coords1 = selected_piece[0]
-                valid_moves = selected_piece[1].valid_move_coords(GameController.get_map(), *coords1)
+            count -= 1
 
-                if len(valid_moves)-1 > 0:
-                    coords2 = valid_moves[randint(0, len(valid_moves)-1)]['coords']
-
-                    GameController.clicked(*coords1)
-                    GameController.clicked(*coords2)
-
+            if count == 0:
+                GameController.clicked(0,0,'AttackBoard')
+                print(GameController.map._board)
+                print('-------------------------/n/n')
+            if count == -2:
+                GameController.clicked(0,1,'AttackBoard')
+                print(GameController.map._board)
+                print('-------------------------/n/n')
+            if count == -3:
+                print(GameController.map._board)
+                print('-------------------------/n/n')
 
             if len(GameController.instructions) == 1:
 
-                if GameController.show_valid_moves(*GameController.instructions[0], self.players[self.turn]):
+                if GameController.instructions[0][2] == 'AttackBoard':
+                    pass
+                elif GameController.show_valid_moves(*GameController.instructions[0], self.players[self.turn]):
                     pass
                 else:
                     print('First choice is wrong. Still ' + self.players[self.turn] + '\'s turn.')
@@ -44,7 +50,18 @@ class ControlLoop:
 
             elif len(GameController.instructions) == 2:
 
-                if GameController.do_move(*GameController.instructions[0], *GameController.instructions[1], self.players[self.turn], [Pawn], King):
+                if GameController.instructions[0][2] == 'AttackBoard':
+                    if GameController.instructions[1][2] == 'AttackBoard':
+                        if GameController.do_attack_board_move(GameController.instructions[0][0], GameController.instructions[0][1], GameController.instructions[1][0], GameController.instructions[1][1], self.players[self.turn]):
+                            pass
+                        else:
+                            print('Bad attack board move. Still ' + self.players[self.turn] + '\'s turn.')
+                            GameController.update_board(GameController.get_map())
+                    else:
+                        print('Bad second choice. Still ' + self.players[self.turn] + '\'s turn.')
+                        GameController.update_board(GameController.get_map())
+
+                elif GameController.do_move(*GameController.instructions[0], *GameController.instructions[1], self.players[self.turn], [Pawn], King):
                     if self.turn < len(self.players) - 1:
                         self.turn += 1
                     else:

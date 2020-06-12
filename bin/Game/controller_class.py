@@ -10,6 +10,8 @@ import copy
 from bin.Game.map_class import Map
 from bin.Game.piece_class import Piece
 
+from bin.Game.attack_board_class import AttackBoard
+
 
 # GameController
 class GameController:
@@ -75,6 +77,9 @@ class GameController:
     def get_gridpoi(self, x, y, z):
         return self.get_map().get_gridpoi(x,y,z)
 
+    def get_attack_gridpoi(self, ax, ay):
+        return self.get_map().get_attack_gridpoi(ax, ay)
+
     def get_valid_move_coords(self, x,y,z):
         return self.get_gridpoi(x,y,z).valid_move_coords(self.get_map(), x,y,z)
     
@@ -85,9 +90,15 @@ class GameController:
     def set_gridpoi(self, x,y,z, piece):
         return self.get_map().set_gridpoi(x,y,z, piece)
 
+    def set_attack_gridpoi(self, ax, ay, board):
+        return self.get_map().set_attack_gridpoi(ax, ay, board)
+
     # Map funcs
     def move_piece(self, x1,y1,z1, x2,y2,z2):
         return self.get_map().move_piece(x1,y1,z1, x2,y2,z2)
+
+    def move_attack_board(self, ax1, ay1, ax2, ay2):
+        return self.get_map().move_attack_board(ax1, ay1, ax2, ay2)
 
     def is_in_check(self, team, king_class):
         return self.get_map().is_in_check(team, king_class)
@@ -115,7 +126,7 @@ class GameController:
     def clicked(self, x,y,z):
         '''
         params:-
-            x,y,z : int : Grid coordinates clicked on
+            x,y,z : int|str : Grid coordinates clicked on
                 (Only used for when you have a UI)
         returns:-
             None
@@ -251,6 +262,26 @@ class GameController:
             return True
 
         return False
+
+
+    def do_attack_board_move(self, ax1, ay1, ax2, ay2, teams_turn):
+
+        if type(self.get_attack_gridpoi(ax1, ay1)) != AttackBoard:
+            return False
+        elif self.get_attack_gridpoi(ax1, ay1).team != teams_turn:
+            return False
+        elif type(self.get_attack_gridpoi(ax2, ay2)) != tuple:
+            return False
+        else:
+            if self.move_attack_board(ax1, ay1, ax2, ay2) == False:
+                return False
+
+            # If visualliser then update screen
+            if self.get_visualliser() != False:
+                self.get_visualliser().update_board(self, self.get_map())
+                
+            return True
+
  
 
 if __name__ == '__main__':

@@ -12,7 +12,7 @@ def main():
 
     controls = []
 
-    for i in range(10):
+    for i in range(1):
         controls.append(GameController('game{}'.format(i), 'bin.Game.ControlLoops.default_star_trek_controlloop_1v1', 'bin.Game.Maps.default_star_trek_map'))
 
     visual_file = importlib.import_module('bin.Visualliser.visualliser2')
