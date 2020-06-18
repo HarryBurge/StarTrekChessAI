@@ -18,6 +18,8 @@ class ControlLoop:
         loop = True
         time.sleep(2)
 
+        GameController.update_board(GameController.get_map())
+
         while loop:
             time.sleep(0.2)
 

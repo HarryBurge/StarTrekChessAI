@@ -12,13 +12,13 @@ def main():
 
     controls = []
 
-    for i in range(1):
+    for i in range(2):
         controls.append(GameController('game{}'.format(i), 'bin.Game.ControlLoops.default_star_trek_controlloop_1v1', 'bin.Game.Maps.default_star_trek_map'))
 
     visual_file = importlib.import_module('bin.Visualliser.visualliser2')
 
     #visuals = visual_file.Visualliser([control1])
-    visuals = visual_file.Visualliser(controls, option_style='2dviewHorizontal-allVertical')
+    visuals = visual_file.Visualliser(controls, option_style='2dviewHorizontal-allHorizontal')
 
 
     for i in controls:

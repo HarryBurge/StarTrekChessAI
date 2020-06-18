@@ -32,8 +32,8 @@ Builder.load_string("""
             size: self.size
             pos: self.pos
 
-    on_press: 
-        self.game_controller.clicked(self.gx,self.gy,self.gz)
+    on_press:
+        if self.app.user_interaction: self.game_controller.clicked(self.gx,self.gy,self.gz)
 """)
 
 

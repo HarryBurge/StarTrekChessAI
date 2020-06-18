@@ -16,12 +16,13 @@ class TwoDViewBoard(GridLayout):
     Holds a grid layout of tiles of a board in a fully 2D view even if board is 3D
     '''
 
-    def __init__(self, app, game_controller, *args, **kwargs):
+    def __init__(self, app, game_controller, user_interaction, *args, **kwargs):
         super().__init__(*args, **kwargs)
         '''
         params:-
             app : Visualliser : Object that has spawned this one
             game_controller : Game assigned to this board
+            user_interaction : bool : True if you want the user to be able to interact with the visuals else False
         '''
         self.cols = 2
 
@@ -53,19 +54,20 @@ class TwoDViewBoard(GridLayout):
         self.add_widget(board_grid)
 
 
-        attack_board_ui = GridLayout()
-        attack_board_ui.size_hint_x = None
-        attack_board_ui.width = 50
+        if user_interaction:
+            attack_board_ui = GridLayout()
+            attack_board_ui.size_hint_x = None
+            attack_board_ui.width = 50
 
-        attack_board_ui.cols = len(board_map._get_attack_board_array()[0])
-        attack_board_ui.rows = len(board_map._get_attack_board_array())
+            attack_board_ui.cols = len(board_map._get_attack_board_array()[0])
+            attack_board_ui.rows = len(board_map._get_attack_board_array())
 
-        for y, x in loops(range(len(board_map._get_attack_board_array())), range(len(board_map._get_attack_board_array()[0]))):
+            for y, x in loops(range(len(board_map._get_attack_board_array())), range(len(board_map._get_attack_board_array()[0]))):
 
-            temp = Square(app, game_controller, x, y, 'AttackBoard')
-            attack_board_ui.add_widget(temp)
+                temp = Square(app, game_controller, x, y, 'AttackBoard')
+                attack_board_ui.add_widget(temp)
 
-        self.add_widget(attack_board_ui)
+            self.add_widget(attack_board_ui)
         
 
     def update_board(self, board_map):
@@ -99,13 +101,13 @@ class TwoDViewBoardH(GridLayout):
     Holds a grid layout of tiles of a board in a fully 2D view even if board is 3D
     '''
 
-    def __init__(self, app, game_controller, *args, **kwargs):
+    def __init__(self, app, game_controller, user_interaction, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        print('hit')
         '''
         params:-
             app : Visualliser : Object that has spawned this one
             game_controller : Game assigned to this board
+            user_interaction : bool : True if you want the user to be able to interact with the visuals else False
         '''
         self.rows = 2
 
@@ -137,19 +139,20 @@ class TwoDViewBoardH(GridLayout):
         self.add_widget(board_grid)
 
 
-        attack_board_ui = GridLayout()
-        attack_board_ui.size_hint_y = None
-        attack_board_ui.height = 50
+        if user_interaction:
+            attack_board_ui = GridLayout()
+            attack_board_ui.size_hint_y = None
+            attack_board_ui.height = 50
 
-        attack_board_ui.rows = len(board_map._get_attack_board_array()[0])
-        attack_board_ui.cols = len(board_map._get_attack_board_array())
+            attack_board_ui.rows = len(board_map._get_attack_board_array()[0])
+            attack_board_ui.cols = len(board_map._get_attack_board_array())
 
-        for x,y in loops(range(len(board_map._get_attack_board_array()[0])), range(len(board_map._get_attack_board_array()))):
+            for x,y in loops(range(len(board_map._get_attack_board_array()[0])), range(len(board_map._get_attack_board_array()))):
 
-            temp = Square(app, game_controller, x, y, 'AttackBoard')
-            attack_board_ui.add_widget(temp)
+                temp = Square(app, game_controller, x, y, 'AttackBoard')
+                attack_board_ui.add_widget(temp)
 
-        self.add_widget(attack_board_ui)
+            self.add_widget(attack_board_ui)
         
 
     def update_board(self, board_map):

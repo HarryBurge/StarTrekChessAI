@@ -11,7 +11,7 @@ from kivy.uix.screenmanager import Screen
 
 from bin.Utils.game_util import loops
 from bin.Visualliser.BoardViews.TwoDViewBoard import TwoDViewBoard, TwoDViewBoardH
-from bin.Visualliser.UIs.AllBoards import AllBoards
+from bin.Visualliser.UIs.AllBoards import AllBoards, AllBoardsH
 from bin.Visualliser.UIs.SwitchBoard import SwitchBoard
 
 
@@ -22,8 +22,8 @@ class Visualliser(App):
     '''
 
     # '2dviewVertical-switchboardVertical'
-    def __init__(self, game_controllers, option_style='2dviewHorizontal-switchboardVertical',
-                BCKGRND_CLR=[1,1,1,0.1], WHITE_FREE=[1,1,1,0.6], BLACK_FREE=[1,1,1,0.4],
+    def __init__(self, game_controllers, option_style='2dviewHorizontal-switchboardHorizontal',
+                BCKGRND_CLR=[1,1,1,0.1], WHITE_FREE=[1,1,1,0.6], BLACK_FREE=[1,1,1,0.4], user_interaction=True,
                 *args, **kwargs):
         '''
         params:-
@@ -32,12 +32,14 @@ class Visualliser(App):
             BCKGRND_CLR : [int,int,int,int] : Colour of the background
             WHITE_FREE : [int,int,int,int] : Mask to put over BCKGRND_CLR on white tiles
             BLACK_FREE : [int,int,int,int] : Mask to put over BCKGRND_CLR on black tiles
+            user_interaction : bool : True if you want the user to be able to interact with the visuals else False
         '''
         super().__init__(*args, **kwargs)
 
         self.game_controllers = game_controllers
         self.option_style = option_style
         self.style = {'background':BCKGRND_CLR, 'whitetile':WHITE_FREE, 'blacktile':BLACK_FREE}
+        self.user_interaction = user_interaction
 
 
     def build(self):
@@ -47,7 +49,6 @@ class Visualliser(App):
         returns:-
             GridLayout : Builds visuals to be displayed when app.run()
         '''
-
         screens = []
         self.boards = []
 
@@ -56,7 +57,7 @@ class Visualliser(App):
             # Create a board view for all games passed
             for index, game_controller in enumerate(self.game_controllers):
                 screen = Screen(name=str(index))
-                board = TwoDViewBoard(self, game_controller)
+                board = TwoDViewBoard(self, game_controller, self.user_interaction)
 
                 self.boards.append(board)
                 screen.add_widget(board)
@@ -67,7 +68,7 @@ class Visualliser(App):
             # Create a board view for all games passed
             for index, game_controller in enumerate(self.game_controllers):
                 screen = Screen(name=str(index))
-                board = TwoDViewBoardH(self, game_controller)
+                board = TwoDViewBoardH(self, game_controller, self.user_interaction)
 
                 self.boards.append(board)
                 screen.add_widget(board)
@@ -82,7 +83,10 @@ class Visualliser(App):
             # Store screens in columns
             self.visual = AllBoards(self, screens)
 
-
+        elif self.option_style.split('-')[1] == 'allHorizontal':
+            # Store screens in rows
+            self.visual = AllBoardsH(self, screens)
+        
         self.visual.height = 100
 
         return self.visual
