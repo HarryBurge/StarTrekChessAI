@@ -10,6 +10,17 @@ from kivy.uix.widget import Widget
 
 # Canvas (graphics) setting
 Builder.load_string("""
+<BackgroundColor>:
+    background_color: 1,1,1,1
+
+    canvas.before:
+        Color:
+            rgba: root.background_color
+        Rectangle:
+            size: self.size
+            pos: self.pos
+
+
 <Square>:
     background_color: 1,1,1,1
     background_normal: ''
@@ -59,6 +70,16 @@ class Square(Button):
 
         self.game_controller = game_controller
 
+    def minimise(self):
+        self.size_hint_y = None
+        self.height = 0
+        self.size_hint_x = None
+        self.width = 0
+
+    def maximise(self):
+        self.size_hint_y = 1
+        self.size_hint_x = 1
+
     def update_square(self, gx,gy,gz, gridpoi):
         '''
         params:-
@@ -69,6 +90,7 @@ class Square(Button):
         '''
         if gridpoi == 'x':
             self.background_color = self.app.style['background']
+            self.background_normal = ''
 
         else:
             

@@ -18,7 +18,7 @@ def main():
     visual_file = importlib.import_module('bin.Visualliser.visualliser2')
 
     #visuals = visual_file.Visualliser([control1])
-    visuals = visual_file.Visualliser(controls, option_style='2dviewVertical-allVertical')
+    visuals = visual_file.Visualliser(controls, option_style='2dviewHorizontal-allVertical')
 
 
     for i in controls:

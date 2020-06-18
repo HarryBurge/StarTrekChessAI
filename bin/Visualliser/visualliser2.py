@@ -10,7 +10,7 @@ from kivy.app import App
 from kivy.uix.screenmanager import Screen
 
 from bin.Utils.game_util import loops
-from bin.Visualliser.BoardViews.TwoDViewBoard import TwoDViewBoard
+from bin.Visualliser.BoardViews.TwoDViewBoard import TwoDViewBoard, TwoDViewBoardH
 from bin.Visualliser.UIs.AllBoards import AllBoards
 from bin.Visualliser.UIs.SwitchBoard import SwitchBoard
 
@@ -21,7 +21,8 @@ class Visualliser(App):
     A class that uses kivy to display chess boards to it. Can handle multiple.
     '''
 
-    def __init__(self, game_controllers, option_style='2dviewVertical-switchboardVertical',
+    # '2dviewVertical-switchboardVertical'
+    def __init__(self, game_controllers, option_style='2dviewHorizontal-switchboardVertical',
                 BCKGRND_CLR=[1,1,1,0.1], WHITE_FREE=[1,1,1,0.6], BLACK_FREE=[1,1,1,0.4],
                 *args, **kwargs):
         '''
@@ -56,6 +57,17 @@ class Visualliser(App):
             for index, game_controller in enumerate(self.game_controllers):
                 screen = Screen(name=str(index))
                 board = TwoDViewBoard(self, game_controller)
+
+                self.boards.append(board)
+                screen.add_widget(board)
+
+                screens.append(screen)
+
+        elif self.option_style.split('-')[0] == '2dviewHorizontal':
+            # Create a board view for all games passed
+            for index, game_controller in enumerate(self.game_controllers):
+                screen = Screen(name=str(index))
+                board = TwoDViewBoardH(self, game_controller)
 
                 self.boards.append(board)
                 screen.add_widget(board)

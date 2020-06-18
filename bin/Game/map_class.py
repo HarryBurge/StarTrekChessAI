@@ -108,6 +108,10 @@ class Map:
         '''
         return self._board
 
+
+    def _get_attack_board_array(self):
+        return self._attackmap
+
     
     # Setters
     def set_gridpoi(self, x,y,z, piece):

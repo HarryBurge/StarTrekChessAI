@@ -18,24 +18,8 @@ class ControlLoop:
         loop = True
         time.sleep(2)
 
-        count = 10
-
         while loop:
             time.sleep(0.2)
-
-            count -= 1
-
-            if count == 0:
-                GameController.clicked(0,0,'AttackBoard')
-                print(GameController.map._board)
-                print('-------------------------/n/n')
-            if count == -2:
-                GameController.clicked(0,1,'AttackBoard')
-                print(GameController.map._board)
-                print('-------------------------/n/n')
-            if count == -3:
-                print(GameController.map._board)
-                print('-------------------------/n/n')
 
             if len(GameController.instructions) == 1:
 
