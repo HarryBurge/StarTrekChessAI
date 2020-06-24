@@ -9,8 +9,9 @@ import copy
 
 from bin.Game.map_class import Map
 from bin.Game.piece_class import Piece
-
 from bin.Game.attack_board_class import AttackBoard
+
+from bin.AI.ai_controller_class import AI_Controller
 
 
 # GameController
@@ -29,21 +30,25 @@ class GameController:
         ['M'|'D'|'T', str|Piece_subclass]
     '''
 
-    def __init__(self, id, controlloop_path, map_path):
+    def __init__(self, id, controlloop_path, map_path, ai_path=None):
         '''
         params:-
             controlloop_path : str : Import path to the controlloop 
                 e.g. bin.ControlLoops.default_star_trek_controlloop_1v1
             map_path : str : Import path to the map
-            visualliser_path : None|str : If none then no visuals else
-                import path to the visualliser (This is a placeholder for 
-                when there are diffrent visuals and if simulating without one)
+            ai_path : str : Import path to the AI
         '''
         # Import specfifc control loop
         self.controlloop = importlib.import_module(controlloop_path).ControlLoop()
 
         # Create specfic map
         self.map = Map(map_path)
+
+        # Import AI
+        if ai_path == None:
+            self.AIController = None
+        else:
+            self.AIController = AI_Controller(ai_path)
 
         self.visualliser = None
 
@@ -65,6 +70,12 @@ class GameController:
         if self.visualliser == None:
             return False
         return self.visualliser
+
+    def get_ai_controller(self):
+        if self.AIController == None:
+            return False
+        else:
+            return self.AIController
 
     
     # Setters
@@ -119,7 +130,10 @@ class GameController:
         returns:-
             None : Starts up code execution of the gamecontroller
         '''
-        self.get_controlloop().run(self)
+        if self.get_ai_controller() == False:
+            self.get_controlloop().run(self)
+        else:
+            self.get_controlloop().run(self, self.get_ai_controller())
 
 
     # UI - Passing
