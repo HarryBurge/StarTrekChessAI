@@ -14,8 +14,27 @@ class AI:
         pass
 
 
-    def get_all_unsafe_pieces_on_team(self, board, team):
-        
-        for piece in board.get_all_pieces():
+    def get_unsafe_pieces_on_team(self, board, team):
+        unsafe_pieces = []
 
-            if piece
+        for coords1, piece1 in board.get_pieces_of_team(team):
+
+            unsafe = False
+
+            for coords2, piece2 in board.get_all_pieces():
+
+                if {'coords':coords1, 'mv_type':'Take'} in piece2.valid_move_coords(board, *coords2):
+                    unsafe = True
+
+            if unsafe:
+                unsafe_pieces.append((coords1, piece1))
+
+        return unsafe_pieces
+
+    def get_safe_pieces_on_team(self, board, team):
+        unsafe_pieces = self.get_unsafe_pieces_on_team(board, team)
+        team_pieces = board.get_pieces_of_team(team)
+
+        safe_pieces = [piece for piece in team_pieces if piece not in unsafe_pieces]
+        
+        return safe_pieces
