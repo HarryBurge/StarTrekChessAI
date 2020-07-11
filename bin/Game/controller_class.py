@@ -11,8 +11,6 @@ from bin.Game.map_class import Map
 from bin.Game.piece_class import Piece
 from bin.Game.attack_board_class import AttackBoard
 
-from bin.AI.ai_controller_class import AI_Controller
-
 
 # GameController
 class GameController:
@@ -48,7 +46,7 @@ class GameController:
         if ai_path == None:
             self.AIController = None
         else:
-            self.AIController = AI_Controller(ai_path)
+            self.AIController = importlib.import_module(ai_path).Bot()
 
         self.visualliser = None
 
@@ -145,6 +143,7 @@ class GameController:
         returns:-
             None
         '''
+        print(x,y,z)
         self.instructions.append([x,y,z])
 
 

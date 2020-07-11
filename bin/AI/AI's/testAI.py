@@ -7,6 +7,15 @@ __last_updated_date__ = '20/06/2020'
 from bin.AI.ai_class import AI
 from random import randint
 
+from bin.Game.Pieces.StarTrekChess.pawn_s import Pawn
+
+'''
+Simulate every move the AI could make - Make sure to be threaded
+Check a few of the values calculated with diffrent weighting to make like an A*
+search algorithm
+
+some times on visualliser a peice doesn't change
+'''
 
 class Bot(AI):
 

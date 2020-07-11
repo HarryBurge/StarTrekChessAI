@@ -99,7 +99,7 @@ class Map:
         return all_pieces
 
     
-    def get_pieces_of_team(self, team):
+    def get_pieces_search(self, poisitive, team=None, piece_type=None):
         '''
         params:-
             team : str : Team to look for peices
@@ -107,15 +107,24 @@ class Map:
             [((int,int,int), Piece_subclass), ...] : Searchs entire board
                 and returns the coordinates and piece object of the piece found 
         '''
-        team_pieces = []
+        pieces = []
 
         for x,y,z in loops(range(self._size[0]), range(self._size[1]), range(self._size[2])):
 
             # Check if at x,y,z in board it is a subclass of Piece and part of team
-            if issubclass(type(self.get_gridpoi(x,y,z)), Piece) and self.get_gridpoi(x,y,z).team == team:
-                team_pieces.append( ((x,y,z), self.get_gridpoi(x,y,z)) )
+            if issubclass(type(self.get_gridpoi(x,y,z)), Piece):
+                
+                checks = poisitive
 
-        return team_pieces
+                if team != None and self.get_gridpoi(x,y,z).team != team:
+                    checks = not poisitive
+                if piece_type != None and type(self.get_gridpoi(x,y,z)) != piece_type:
+                    checks = not poisitive
+
+                if checks:
+                    pieces.append( ((x,y,z), self.get_gridpoi(x,y,z)) )
+
+        return pieces
 
 
     def _get_board_array(self):
