@@ -10,3 +10,7 @@ def loops(*args, values=[]):
             temp += loops(*args[1:], values=values + [i])
 
         return temp
+
+
+def normalise(value, maxv, minv):
+    return (value - minv)/(maxv - minv)
