@@ -13,7 +13,7 @@ def main():
     controls = []
 
     for i in range(1):
-        controls.append(GameController('game{}'.format(i), 'bin.Game.ControlLoops.star_trek_controlloop_1vbot', 'bin.Game.Maps.default_star_trek_map', 'bin.AI.AI\'s.testAI'))
+        controls.append(GameController('game{}'.format(i), 'bin.Game.ControlLoops.star_trek_controlloop_1vbot', 'bin.Game.Maps.default_star_trek_map', 'bin.AI.AIs.testAI'))
 
     visual_file = importlib.import_module('bin.Visualliser.visualliser2')
 
