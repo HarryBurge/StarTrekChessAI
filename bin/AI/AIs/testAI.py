@@ -199,10 +199,3 @@ class Bot(AI):
                 potential_attacks.append((move['coords'], board.get_gridpoi(*move['coords'])))
 
         return potential_attacks
-
-
-    def simulate_piece_move(self, board, x1,y1,z1, x2,y2,z2):
-        simulated_board = copy.deepcopy(board)
-        if simulated_board.move_piece(x1,y1,z1, x2,y2,z2) == False:
-            return False
-        return simulated_board

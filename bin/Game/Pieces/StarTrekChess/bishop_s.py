@@ -13,7 +13,7 @@ class Bishop(piece_class.Piece):
     Class for bishop, inherits code for Piece
     '''
 
-    def __init__(self, img_path='bin/Game/Pieces/imgs/', value=3, team='Netural'):
+    def __init__(self, img_path='bin/Game/Pieces/imgs/', value=4, team='Netural'):
         '''
         params:-
             img_path : str : Path to the folder where images are stores
