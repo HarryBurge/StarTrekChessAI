@@ -5,7 +5,6 @@ __last_updated_date__ = '20/06/2020'
 
 import copy
 import numpy as np
-import tensorflow as tf
 
 
 class AI:
@@ -24,7 +23,7 @@ class AI:
         return simulated_board
 
     def convert_map_to_float_vector(self, board, team):
-        board_array = board._get_board_array()
+        board_array = copy.deepcopy(board._get_board_array())
         
         for coord, piece in board.get_pieces_search(True, team=team):
             board_array[coord[2]][coord[1]][coord[0]] = piece.value
@@ -43,5 +42,18 @@ class AI:
         b = np.asarray(board_array, dtype = float)
         b = b.flatten()
         return b
+
+    def get_all_possible_moves(self, board, team):
+        all_possible_moves = []
+
+        for coord, piece in board.get_pieces_search(True, team=team):
+            for move in piece.valid_move_coords(board, *coord):
+
+                if move['mv_type'] != 'Defending':
+                    all_possible_moves.append((coord, move['coords']))
+
+        return all_possible_moves
+
+
 
     

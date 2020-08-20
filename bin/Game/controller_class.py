@@ -28,7 +28,7 @@ class GameController:
         ['M'|'D'|'T', str|Piece_subclass]
     '''
 
-    def __init__(self, id, controlloop_path, map_path, ai_path=None):
+    def __init__(self, id, controlloop_path, map_path, ai_path=None, ai_path2=None):
         '''
         params:-
             controlloop_path : str : Import path to the controlloop 
@@ -45,8 +45,10 @@ class GameController:
         # Import AI
         if ai_path == None:
             self.AIController = None
-        else:
+        elif ai_path2 == None:
             self.AIController = importlib.import_module(ai_path).Bot()
+        else:
+            self.AIController= [importlib.import_module(ai_path).Bot(), importlib.import_module(ai_path2).Bot()]
 
         self.visualliser = None
 
@@ -143,7 +145,6 @@ class GameController:
         returns:-
             None
         '''
-        print(x,y,z)
         self.instructions.append([x,y,z])
 
 

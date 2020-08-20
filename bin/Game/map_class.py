@@ -114,12 +114,12 @@ class Map:
             # Check if at x,y,z in board it is a subclass of Piece and part of team
             if issubclass(type(self.get_gridpoi(x,y,z)), Piece):
                 
-                checks = poisitive
+                checks = True
 
-                if team != None and self.get_gridpoi(x,y,z).team != team:
-                    checks = not poisitive
-                if piece_type != None and type(self.get_gridpoi(x,y,z)) != piece_type:
-                    checks = not poisitive
+                if team != None and (self.get_gridpoi(x,y,z).team == team) != poisitive:
+                    checks = False
+                if piece_type != None and (type(self.get_gridpoi(x,y,z)) != piece_type) != poisitive:
+                    checks = False
 
                 if checks:
                     pieces.append( ((x,y,z), self.get_gridpoi(x,y,z)) )

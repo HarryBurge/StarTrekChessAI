@@ -27,7 +27,7 @@ class ControlLoop:
             if self.players[self.turn] == self.bot:
                 # Bots go
                 coords1, coords2 = AI.suggest_move(GameController.get_map(), self.bot)
-                
+
                 if coords1==False or coords2==False:
                     print('Bad suggestion')
 
@@ -79,9 +79,9 @@ class ControlLoop:
                     GameController.instructions = []
 
 
-        if GameController.is_in_check(self.players[self.turn], King):
-            print(self.players[self.turn] + ' is in check')
+            if GameController.is_in_check(self.players[self.turn], King):
+                print(self.players[self.turn] + ' is in check')
 
-            if GameController.is_in_checkmate(self.players[self.turn], King):
-                print(self.players[self.turn] + ' is in checkmate')
-                loop = False
+                if GameController.is_in_checkmate(self.players[self.turn], King):
+                    print(self.players[self.turn] + ' is in checkmate')
+                    loop = False
