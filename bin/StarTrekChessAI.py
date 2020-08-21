@@ -13,6 +13,17 @@ from os import system, name
 
 #, 'bin.AI.AIs.nn_deep_ffnn_perceptron'
 
+# define our clear function 
+def clear(): 
+  
+    # for windows 
+    if name == 'nt': 
+        _ = system('cls') 
+  
+    # for mac and linux(here, os.name is 'posix') 
+    else: 
+        _ = system('clear') 
+
 
 def main_1v1():
 
@@ -122,21 +133,15 @@ def main_botvbot_train_genetic(number_of_boards, ai_paths, ai_files, population=
     t.start()
 
     while t.is_alive():
+        time.sleep(0.1)
         clear()
         for i in running_controls:
             print(i.gamestate_str())
+
     
+    # One population cycle complete
+    fitnesses = []
 
-    print('finished one pop')
+    
+    
     input()
-
-# define our clear function 
-def clear(): 
-  
-    # for windows 
-    if name == 'nt': 
-        _ = system('cls') 
-  
-    # for mac and linux(here, os.name is 'posix') 
-    else: 
-        _ = system('clear') 
