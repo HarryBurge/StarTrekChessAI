@@ -13,7 +13,7 @@ from keras.layers import Dense
 
 class Bot(AI):
 
-    def __init__(self):
+    def __init__(self, save_file=None):
         super().__init__()
 
         #create model
@@ -28,6 +28,9 @@ class Bot(AI):
 
         # self.load_weights_and_biass('bin/AI/AIs/nn_deep_ffnn_perceptron_wb/wb1.keras')
         # self.save_weights_and_biass('bin/AI/AIs/nn_deep_ffnn_perceptron_wb/wb1.keras')
+
+        if save_file!=None:
+            self.load_weights_and_biass(save_file)
 
 
     def suggest_move(self, board, team):

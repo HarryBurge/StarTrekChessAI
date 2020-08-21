@@ -47,6 +47,8 @@ class AllBoardsH(GridLayout):
             screens : (Screen, ...) : Screens to be added
         '''
         super().__init__(*args, **kwargs)
+        self.screens= []
+        self.app = app
 
         self.cols = 1
 
@@ -55,6 +57,8 @@ class AllBoardsH(GridLayout):
 
         for screen in screens:
             self.add_widget(screen)
+            self.screens.append(screen)
 
             # Adds a line inbetween to look better
             self.add_widget(BackgroundColor(app.style['background'], size_hint_y=None, height=10))
+

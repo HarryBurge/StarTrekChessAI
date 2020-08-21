@@ -14,6 +14,9 @@ from bin.Visualliser.BoardViews.TwoDViewBoard import TwoDViewBoard, TwoDViewBoar
 from bin.Visualliser.UIs.AllBoards import AllBoards, AllBoardsH
 from bin.Visualliser.UIs.SwitchBoard import SwitchBoard
 
+from kivy.clock import Clock
+Clock.max_iteration = 100
+
 
 # Visualliser
 class Visualliser(App):
@@ -40,6 +43,7 @@ class Visualliser(App):
         self.option_style = option_style
         self.style = {'background':BCKGRND_CLR, 'whitetile':WHITE_FREE, 'blacktile':BLACK_FREE}
         self.user_interaction = user_interaction
+        self.boards = []
 
 
     def build(self):
@@ -49,8 +53,7 @@ class Visualliser(App):
         returns:-
             GridLayout : Builds visuals to be displayed when app.run()
         '''
-        screens = []
-        self.boards = []
+        self.screens = []
 
         if self.option_style.split('-')[0] == '2dviewVertical':
 
@@ -62,7 +65,7 @@ class Visualliser(App):
                 self.boards.append(board)
                 screen.add_widget(board)
 
-                screens.append(screen)
+                self.screens.append(screen)
 
         elif self.option_style.split('-')[0] == '2dviewHorizontal':
             # Create a board view for all games passed
@@ -73,19 +76,19 @@ class Visualliser(App):
                 self.boards.append(board)
                 screen.add_widget(board)
 
-                screens.append(screen)
+                self.screens.append(screen)
 
         if self.option_style.split('-')[1] == 'switchboardVertical':
             # Add switchable ui
-            self.visual = SwitchBoard(self, screens)
+            self.visual = SwitchBoard(self, self.screens)
 
         elif self.option_style.split('-')[1] == 'allVertical':
             # Store screens in columns
-            self.visual = AllBoards(self, screens)
+            self.visual = AllBoards(self, self.screens)
 
         elif self.option_style.split('-')[1] == 'allHorizontal':
             # Store screens in rows
-            self.visual = AllBoardsH(self, screens)
+            self.visual = AllBoardsH(self, self.screens)
         
         self.visual.height = 100
 
@@ -104,3 +107,30 @@ class Visualliser(App):
         for board in self.boards:
             if board.game_controller == game_controller:
                 board.update_board(board_map)
+
+
+    # def replace_board_and_controller(self, tindex, tgame_controller, tboard_map):
+    #     self.root.clear_widgets()
+    #     self.screens = []
+    #     self.boards = []
+
+    #     # Create a board view for all games passed
+    #     for index, game_controller in enumerate(self.game_controllers):
+    #         if index == tindex:
+    #             screen = Screen(name=str(tindex))
+    #             board = TwoDViewBoardH(self, tgame_controller, self.user_interaction)
+
+    #             self.boards.append(board)
+    #             screen.add_widget(board)
+
+    #             self.screens.append(screen)
+    #         else:
+    #             screen = Screen(name=str(index))
+    #             board = TwoDViewBoardH(self, game_controller, self.user_interaction)
+
+    #             self.boards.append(board)
+    #             screen.add_widget(board)
+
+    #             self.screens.append(screen)
+
+    #     self.root.add_widget(AllBoardsH(self, self.screens))

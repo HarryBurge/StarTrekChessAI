@@ -46,7 +46,7 @@ while yn:
             clear()
             print('''
 -----Genetic Visual Trainer----------
-1 - Visuallise each game
+1 - Verbose train
 
 99 - Back
 -------------------------------------
@@ -102,7 +102,7 @@ while yn:
                     ai_save_files.append(None if temp==0 else 'bin/AI/AIs/' + ai_paths[i].split('.')[-1]+ '_wb/' + f[temp-1])
                 
                 clear()
-                StarTrekChessAI.main_botvbot_train(number_of_boards, ai_paths, ai_save_files)
+                StarTrekChessAI.main_botvbot_train_genetic(number_of_boards, ai_paths, ai_save_files, verbose=True)
 
 
             elif option2 == '99':

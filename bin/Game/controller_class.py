@@ -28,7 +28,7 @@ class GameController:
         ['M'|'D'|'T', str|Piece_subclass]
     '''
 
-    def __init__(self, id, controlloop_path, map_path, ai_path=None, ai_path2=None):
+    def __init__(self, id, controlloop_path, map_path, ai_path=None, ai_path2=None, ai_save=None, ai2_save=None, training=False, verbose=False):
         '''
         params:-
             controlloop_path : str : Import path to the controlloop 
@@ -37,7 +37,10 @@ class GameController:
             ai_path : str : Import path to the AI
         '''
         # Import specfifc control loop
-        self.controlloop = importlib.import_module(controlloop_path).ControlLoop()
+        if not training:
+            self.controlloop = importlib.import_module(controlloop_path).ControlLoop()
+        else:
+            self.controlloop = importlib.import_module(controlloop_path).ControlLoop(training=True, verbose=verbose)
 
         # Create specfic map
         self.map = Map(map_path)
@@ -46,9 +49,9 @@ class GameController:
         if ai_path == None:
             self.AIController = None
         elif ai_path2 == None:
-            self.AIController = importlib.import_module(ai_path).Bot()
+            self.AIController = importlib.import_module(ai_path).Bot(ai_save)
         else:
-            self.AIController= [importlib.import_module(ai_path).Bot(), importlib.import_module(ai_path2).Bot()]
+            self.AIController= [importlib.import_module(ai_path).Bot(ai_save), importlib.import_module(ai_path2).Bot(ai2_save)]
 
         self.visualliser = None
 
@@ -119,6 +122,8 @@ class GameController:
 
     # Visulliser funcs
     def update_board(self, board):
+        if self.get_visualliser() == False:
+            return False
         return self.get_visualliser().update_board(self, board)
 
 
@@ -128,12 +133,14 @@ class GameController:
         params:- 
             None
         returns:-
-            None : Starts up code execution of the gamecontroller
+            True : Starts up code execution of the gamecontroller
         '''
         if self.get_ai_controller() == False:
             self.get_controlloop().run(self)
         else:
             self.get_controlloop().run(self, self.get_ai_controller())
+
+        return True
 
 
     # UI - Passing
@@ -295,6 +302,10 @@ class GameController:
                 self.get_visualliser().update_board(self, self.get_map())
                 
             return True
+
+    
+    def gamestate_str(self):
+        return self.controlloop.gamestate_str(self)
 
  
 

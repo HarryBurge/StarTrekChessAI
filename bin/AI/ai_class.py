@@ -16,11 +16,13 @@ class AI:
     def suggest_move(self, board, team, all_teams):
         pass
 
+
     def simulate_piece_move(self, board, x1,y1,z1, x2,y2,z2):
         simulated_board = copy.deepcopy(board)
         if simulated_board.move_piece(x1,y1,z1, x2,y2,z2) == False:
             return False
         return simulated_board
+
 
     def convert_map_to_float_vector(self, board, team):
         board_array = copy.deepcopy(board._get_board_array())
