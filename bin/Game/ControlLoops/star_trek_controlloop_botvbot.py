@@ -17,12 +17,17 @@ class ControlLoop: # Stop loops happening within the game
     def __init__(self, training, verbose):
         self.players = ['White', 'Black']
         self.turn = 0
+
+        self.training = training
+        self.verbose = verbose
+
         self.count = 0
         self.history = []
         self.messages = []
         self.players_check_count = [0,0]
-        self.training = training
-        self.verbose = verbose
+
+        self.score = 0
+
 
     def run(self, GameController, AIS):
 
@@ -33,23 +38,7 @@ class ControlLoop: # Stop loops happening within the game
 
         while loop:
 
-            # Bots go
-            coords1, coords2 = AIS[self.turn].suggest_move(GameController.get_map(), self.players[self.turn])
-            self.count += 1
-
-            if coords1==False or coords2==False:
-                self.messages.append('Bad suggestion')
-
-            elif GameController.do_move(*coords1, *coords2, self.players[self.turn], [Pawn], King):
-                GameController.update_board(GameController.get_map())
-                self.history.append((coords1, coords2))
-                # self.messages.append('Bot made succsesful move' + str(self.count))
-
-                if self.turn < len(self.players) - 1:
-                    self.turn += 1
-                else:
-                    self.turn = 0
-
+            # Board state checks
             if GameController.is_in_check(self.players[self.turn], King):
                 self.messages.append(self.players[self.turn] + ' is in check')
                 if self.training:
@@ -59,13 +48,31 @@ class ControlLoop: # Stop loops happening within the game
                     self.messages.append(self.players[self.turn] + ' is in checkmate')
                     loop = False
 
-            if self.if_repeats(self.history):
-                self.messages.append('There is over 3 repeated moves in history')
+            if self.if_repeats(self.history[-10:]):
+                self.messages.append('There is over 3 repeated moves in  the past 10 history')
                 loop = False
 
             if self.training and max(self.players_check_count) > 6:
                 self.messages.append(self.players[self.turn] + ' has been checked 6 times')
                 loop = False
+
+            # Bots go
+            if loop:
+                coords1, coords2 = AIS[self.turn].suggest_move(GameController.get_map(), self.players[self.turn])
+                self.count += 1
+
+                if coords1==False or coords2==False:
+                    self.messages.append('Bad suggestion')
+
+                elif GameController.do_move(*coords1, *coords2, self.players[self.turn], [Pawn], King):
+                    GameController.update_board(GameController.get_map())
+                    self.history.append((coords1, coords2))
+                    # self.messages.append('Bot made succsesful move' + str(self.count))
+
+                    if self.turn < len(self.players) - 1:
+                        self.turn += 1
+                    else:
+                        self.turn = 0
 
     
     def if_repeats(self, moves, num_of_repeats=3):

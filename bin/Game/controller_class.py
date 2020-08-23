@@ -43,7 +43,7 @@ class GameController:
             self.controlloop = importlib.import_module(controlloop_path).ControlLoop(training=True, verbose=verbose)
 
         # Create specfic map
-        self.map = Map(map_path)
+        self.map = copy.deepcopy(Map(map_path))
 
         # Import AI
         if ai_path == None:
@@ -304,8 +304,37 @@ class GameController:
             return True
 
     
+    # Training things
     def gamestate_str(self):
         return self.controlloop.gamestate_str(self)
+
+    def score(self):
+        bots = self.controlloop.players
+        bot_scores = [0,0]
+
+        for message in self.controlloop.messages:
+            
+            if message == bots[0] + ' is in check':
+                bot_scores[0] += -1
+                bot_scores[1] += 1
+            elif message == bots[1] + ' is in check':
+                bot_scores[0] += 1
+                bot_scores[1] += -1
+            elif message == bots[0] + ' is in checkmate':
+                bot_scores[0] += -100
+                bot_scores[1] += 100 - len(self.controlloop.history)
+            elif message == bots[1] + ' is in checkmate':
+                bot_scores[0] += 100 - len(self.controlloop.history)
+                bot_scores[1] += -100
+            elif message == 'There is over 3 repeated moves in  the past 10 history':
+                bot_scores[0] += -10
+                bot_scores[1] += -10
+            elif message == 'Bad suggestion':
+                bot_scores[0] += -10
+                bot_scores[1] += -10
+
+        return bot_scores
+        
 
  
 

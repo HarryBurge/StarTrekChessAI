@@ -142,6 +142,11 @@ def main_botvbot_train_genetic(number_of_boards, ai_paths, ai_files, population=
     # One population cycle complete
     fitnesses = []
 
+    for i in controls:
+        fitnesses.append(i.score())
+
+    print('fitnesses')
+    print(fitnesses)
     
     
     input()
