@@ -55,6 +55,8 @@ while yn:
 
             if option2 == '1':
                 number_of_boards = int(input('num_of_boards>> '))
+                population_size = int(input('population_size>> '))
+                epochs = int(input('number_of_epochs>> '))
 
                 print('----AI options----')
                 f = []
@@ -93,16 +95,16 @@ while yn:
 
                     print('0 - None')
 
-                    for index,i in enumerate(f):
-                        print(str(index+i) + ' - ' + i)
+                    for index,j in enumerate(f):
+                        print(str(index+1) + ' - ' + j)
 
                     print('-------------------------')
 
                     temp = int(input('AI 1 Save>> '))
-                    ai_save_files.append(None if temp==0 else 'bin/AI/AIs/' + ai_paths[i].split('.')[-1]+ '_wb/' + f[temp-1])
+                    ai_save_files.append(None if temp==0 else 'bin/AI/AIs/' + ai_paths[i].split('.')[-1]+ '_wb/' + f[int(temp)-1])
                 
                 clear()
-                StarTrekChessAI.main_botvbot_train_genetic(number_of_boards, ai_paths, ai_save_files, verbose=True)
+                StarTrekChessAI.main_botvbot_train_genetic(number_of_boards, ai_paths, ai_save_files, population=population_size, epochs=epochs, verbose=True)
 
 
             elif option2 == '99':

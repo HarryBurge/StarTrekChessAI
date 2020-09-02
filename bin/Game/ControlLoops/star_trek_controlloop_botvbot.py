@@ -56,6 +56,10 @@ class ControlLoop: # Stop loops happening within the game
                 self.messages.append(self.players[self.turn] + ' has been checked 6 times')
                 loop = False
 
+            if self.count > 100:
+                self.messages.append('Game lasted to long')
+                loop = False
+
             # Bots go
             if loop:
                 coords1, coords2 = AIS[self.turn].suggest_move(GameController.get_map(), self.players[self.turn])

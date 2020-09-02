@@ -332,6 +332,9 @@ class GameController:
             elif message == 'Bad suggestion':
                 bot_scores[0] += -10
                 bot_scores[1] += -10
+            elif message == 'Game lasted to long':
+                bot_scores[0] += -10
+                bot_scores[1] += -10
 
         return bot_scores
         
