@@ -158,7 +158,7 @@ def main_botvbot_train_genetic(number_of_boards, ai_paths, ai_files, population=
         current_pop_controls[top_index].get_ai_controller()[0].save_weights_and_biass('bin/AI/AIs/nn_deep_ffnn_perceptron_wb/ai_' + str(e) + '.h5')
 
         # Change fitness into all sum == 1 for random choice weights
-        pop_fitness = 0
+        pop_fitness = 0.01
         for i in fitnesses:
             pop_fitness += i
 
