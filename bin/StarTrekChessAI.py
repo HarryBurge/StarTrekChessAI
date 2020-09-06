@@ -143,6 +143,7 @@ def main_botvbot_train_genetic(number_of_boards, ai_paths, ai_files, population=
         while t.is_alive():
             time.sleep(0.5)
             clear()
+            print('------------Epoch ' + str(e) + '------------')
             for i in running_current_pop_controls:
                 print(i.gamestate_str())
 
@@ -197,7 +198,7 @@ def main_botvbot_train_genetic(number_of_boards, ai_paths, ai_files, population=
                         if random.randint(0, 1) == 0:
                             newwb[0][x].itemset(k, bot2wb[0][x,k])
 
-                        if random.randint(0, 100) < mutation_chance:
+                        if random.randint(0, 10000) < mutation_chance:
                             newwb[0][x].itemset(k, random.uniform(-1, 1))
 
                 new_control.get_ai_controller()[0].model.get_layer(index=j).set_weights(newwb)
