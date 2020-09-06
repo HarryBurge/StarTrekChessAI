@@ -57,6 +57,7 @@ while yn:
                 number_of_boards = int(input('num_of_boards>> '))
                 population_size = int(input('population_size>> '))
                 epochs = int(input('number_of_epochs>> '))
+                mutatation = int(input('mutation chance>> '))
 
                 print('----AI options----')
                 f = []
@@ -104,7 +105,7 @@ while yn:
                     ai_save_files.append(None if temp==0 else 'bin/AI/AIs/' + ai_paths[i].split('.')[-1]+ '_wb/' + f[int(temp)-1])
                 
                 clear()
-                StarTrekChessAI.main_botvbot_train_genetic(number_of_boards, ai_paths, ai_save_files, population=population_size, epochs=epochs, verbose=True)
+                StarTrekChessAI.main_botvbot_train_genetic(number_of_boards, ai_paths, ai_save_files, population=population_size, epochs=epochs, mutation_chance=mutatation, verbose=True)
 
 
             elif option2 == '99':

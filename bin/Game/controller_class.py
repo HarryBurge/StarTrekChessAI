@@ -11,6 +11,8 @@ from bin.Game.map_class import Map
 from bin.Game.piece_class import Piece
 from bin.Game.attack_board_class import AttackBoard
 
+from bin.Game.Pieces.StarTrekChess.king_s import King
+
 
 # GameController
 class GameController:
@@ -312,14 +314,15 @@ class GameController:
         bots = self.controlloop.players
         bot_scores = [0,0]
 
+        # Messages from within game time
         for message in self.controlloop.messages:
             
             if message == bots[0] + ' is in check':
-                bot_scores[0] += -1
-                bot_scores[1] += 1
+                bot_scores[0] += -2
+                bot_scores[1] += 2
             elif message == bots[1] + ' is in check':
-                bot_scores[0] += 1
-                bot_scores[1] += -1
+                bot_scores[0] += 2
+                bot_scores[1] += -2
             elif message == bots[0] + ' is in checkmate':
                 bot_scores[0] += -100
                 bot_scores[1] += 100 - len(self.controlloop.history)
@@ -335,6 +338,13 @@ class GameController:
             elif message == 'Game lasted to long':
                 bot_scores[0] += -10
                 bot_scores[1] += -10
+
+        # Board state score
+        for i in range(len(bots)):
+
+            for coords, piece in self.get_map().get_pieces_search(True, team=bots[i]):
+                if type(piece) != King:
+                    bot_scores[i] += piece.value
 
         return bot_scores
         

@@ -7,6 +7,7 @@ __last_updated_date__ = '14/07/2020'
 from bin.AI.ai_class import AI
 
 import tensorflow as tf
+import random
 
 from keras.models import Sequential
 from keras.layers import Dense
@@ -31,6 +32,18 @@ class Bot(AI):
 
         if save_file!=None:
             self.load_weights_and_biass(save_file)
+        else:
+            # Make weights more diffrent compared to init ones
+            for j in range(5):
+
+                newwb = self.model.get_layer(index=j).get_weights()
+
+                for x in range(len(newwb[0])):
+                    for k in range(len(newwb[0][x])):
+
+                        newwb[0][x].itemset(k, random.uniform(-1, 1))
+
+                self.model.get_layer(index=j).set_weights(newwb)
 
 
     def suggest_move(self, board, team):

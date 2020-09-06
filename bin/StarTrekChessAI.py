@@ -88,7 +88,7 @@ def main_botvbot():
     visuals.run()
 
 
-def main_botvbot_train_genetic(number_of_boards, ai_paths, ai_files, population=4, epochs=4, save_highest_fitness=True, verbose=False):
+def main_botvbot_train_genetic(number_of_boards, ai_paths, ai_files, population=4, epochs=4, mutation_chance=1, save_highest_fitness=True, verbose=False):
 
     average_fitness_epoch = []
     top_fitness_epoch = []
@@ -141,7 +141,7 @@ def main_botvbot_train_genetic(number_of_boards, ai_paths, ai_files, population=
         t.start()
 
         while t.is_alive():
-            time.sleep(0.1)
+            time.sleep(0.5)
             clear()
             for i in running_current_pop_controls:
                 print(i.gamestate_str())
@@ -197,7 +197,7 @@ def main_botvbot_train_genetic(number_of_boards, ai_paths, ai_files, population=
                         if random.randint(0, 1) == 0:
                             newwb[0][x].itemset(k, bot2wb[0][x,k])
 
-                        if random.randint(0, 100) < 5:
+                        if random.randint(0, 100) < mutation_chance:
                             newwb[0][x].itemset(k, random.uniform(-1, 1))
 
                 new_control.get_ai_controller()[0].model.get_layer(index=j).set_weights(newwb)
