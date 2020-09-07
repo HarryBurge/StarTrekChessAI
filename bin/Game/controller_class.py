@@ -346,8 +346,8 @@ class GameController:
                 if type(piece) != King:
                     bot_scores[i] += piece.value
 
-        return bot_scores
-        
+        # Gets diffrence, therfore making ai want to minimise opponent score and maximise itself
+        return bot_scores[0] - bot_scores[1]
 
  
 

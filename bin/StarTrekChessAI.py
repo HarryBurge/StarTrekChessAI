@@ -6,6 +6,7 @@ import time
 import random
 import copy
 import numpy
+import datetime
 from os import system, name
 
 #'bin.Game.ControlLoops.default_star_trek_controlloop_1v1'
@@ -99,6 +100,10 @@ def main_botvbot_train_genetic(number_of_boards, ai_paths, ai_files, population=
     for i in range(population):
         current_pop_controls.append(GameController('game{}'.format(i), 'bin.Game.ControlLoops.star_trek_controlloop_botvbot', 'bin.Game.Maps.default_star_trek_map', *ai_paths, *ai_files, training=True, verbose=True))
     
+    log = open('bin/AI/AIs/log.txt', 'a')
+    log.write('\n\n-----Stats' + str(datetime.datetime.today().strftime('%Y-%m-%d')) + '------\n')
+    log.close()
+
     for e in range(epochs):
         threads = []
         running_current_pop_controls = []
@@ -152,7 +157,7 @@ def main_botvbot_train_genetic(number_of_boards, ai_paths, ai_files, population=
         fitnesses = []
 
         for i in current_pop_controls:
-            fitnesses.append(i.score()[0])
+            fitnesses.append(i.score())
 
         # Save the max of that population
         top_index = fitnesses.index(max(fitnesses))
@@ -166,6 +171,10 @@ def main_botvbot_train_genetic(number_of_boards, ai_paths, ai_files, population=
         # Stats
         top_fitness_epoch.append(max(fitnesses))
         average_fitness_epoch.append(pop_fitness/population)
+
+        log = open('bin/AI/AIs/log.txt', 'a')
+        log.write(str(e) + 'top= ' + str(top_fitness_epoch[-1]) + '  avg= ' + str(average_fitness_epoch[-1])+'\n')
+        log.close()
         # ----
 
         for i in range(len(fitnesses)):
@@ -216,7 +225,8 @@ def main_botvbot_train_genetic(number_of_boards, ai_paths, ai_files, population=
         # repeat but against new pop and the second bot is the max fitness from prevouis
 
     clear()
-    print('-----Stats------')
+
+    print('-----Stats' + str(datetime.datetime.today().strftime('%Y-%m-%d')) + '------')
     for i in range(len(average_fitness_epoch)):
         print(str(i) + 'top= ' + str(top_fitness_epoch[i]) + '  avg= ' + str(average_fitness_epoch[i]))
     input('-------End-------')
